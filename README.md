@@ -10,8 +10,8 @@ This is purly a free personal project, I didn't get sponsorship or contact from 
 The goals of this module are
 
 * can be used under standard MicroPython firmware;
-* remapped pin numbers so users can access them just like the way on micro:bits;
-* most functions are named after their equivalents in micro:bit's MakeCode JavaScript Block editor.
+* Pins can be referenced by micro:bit pin numbers, which will be remapped to corresponding ESP32 pins;
+* many functions are also named after their equivalents in micro:bit's MakeCode JavaScript Block editor.
 
 And sorry, no text scrolling/number displaying yet. I'll try to figure it out in the future.
 
@@ -37,7 +37,7 @@ The module use this library to control the onboard MPU-9250 3-axis accelerometer
 
 [MicroPython MPU-9250 (MPU-6500 + AK8963) I2C driver](https://github.com/tuupola/micropython-mpu9250) (Github)
 
-Download the .zip file then upload <b>mpu9250.py</b>, <b>mpu6500.py</b> and <b>ak8963.py</b> onto your BPI:bit in the original name.
+Download the .zip file then upload <b>mpu9250.py</b>, <b>mpu6500.py</b> and <b>ak8963.py</b> onto your BPI:bit in their original name.
 
 ## Functions and Example
 
@@ -68,12 +68,6 @@ Uploaded files:
 mpu9250.py
 mpu6500.py
 ak8963.py
-```
-
-### Return an I2C Object
-
-```python
-i2c = BPIBIT.getI2C()
 ```
 
 ### Pause/Delay/Wait (ms)
@@ -198,7 +192,7 @@ BPIBIT.calibrateCompass()
 
 The parameter for acceleration(), gyroscope() and magneticForce() is 'x', 'y' or 'z'.
 
-The compass calibration takes 15 seconds, in which you'll have to turn your BPI:bit around in all directions.
+The compass calibration takes 15 seconds, in which you'll have to turn your BPI:bit around at all directions.
 
 ## NeoPixel LED Display
 
@@ -238,3 +232,37 @@ Or use the display as a dynamic bar graph:
 ```python
 BPIBIT.plotBarGraph(value=lightLevel(), maxValue=1023, code='W')
 ```
+
+### I2C
+
+For I2C devices, it's as same as micro:bit: SCL to Pin 19 (ESP32's GPIO 22) and SDA to Pin 20 (ESP32's GPIO 21). You can get a I2C object quickly as below:
+
+```python
+i2c = BPIBIT.getI2C()
+```
+
+### SPI
+
+I didn't implement SPI functions, since the settings may differ depending on the hardwares.
+
+```python
+import BPIBIT
+from machine import Pin, SPI
+
+spi = SPI(baudrate=100000, polarity=1, phase=0,
+          sck=Pin(BPIBIT.digitalPin[0]),
+          mosi=Pin(BPIBIT.digitalPin[1]),
+          miso=Pin(BPIBIT.digitalPin[2]))
+          
+hspi = SPI(1, baudrate=10000000,
+           sck=Pin(BPIBIT.digitalPin[7]),
+           mosi=Pin(BPIBIT.digitalPin[3]),
+           miso=Pin(BPIBIT.digitalPin[6]))
+           
+vspi = SPI(2, baudrate=80000000, polarity=0, phase=0, bits=8, firstbit=0,
+           sck=Pin(BPIBIT.digitalPin[13]),
+           mosi=Pin(BPIBIT.digitalPin[15]),
+           miso=Pin(BPIBIT.digitalPin[14]))
+```
+
+The first spi variable is using software SPI bus. ESP32 also support two faster hardward SPI bus, hspi and vspi, which the hardwares have to connect specific pins as above. See [here](http://docs.micropython.org/en/latest/esp32/quickref.html#software-spi-bus) and [here](http://docs.micropython.org/en/latest/library/machine.SPI.html#machine-spi) for more information.
