@@ -3,9 +3,9 @@
 ![153543457141539355s6op3](https://user-images.githubusercontent.com/44191076/62682966-f88fb280-b9ef-11e9-83e4-47976fa68350.jpg)
 ![800x423xBPI_bit_interfact JPG pagespeed ic NngFYTGX_e](https://user-images.githubusercontent.com/44191076/62682983-047b7480-b9f0-11e9-8b0e-e7c8cc24b677.jpg)
 
-This is purly a personal project, I didn't get sponsorship or contact from Banana Pi, Webduino or whoever made this board.
+This is purly a free personal project, I didn't get sponsorship or contact from Banana Pi, Webduino or whoever made this board.
 
-[PI:bit](http://wiki.banana-pi.org/BPI-Bit) (or Web:bit) is a ESP32 board made in the style of [BBC micro:bit](https://tech.microbit.org/hardware/); the edge connectors allow it can be used on micro:bit accessories.
+[BPI:bit](http://wiki.banana-pi.org/BPI-Bit) (or Web:bit) is a ESP32 board made in the style of [BBC micro:bit](https://tech.microbit.org/hardware/); the edge connectors allow it can be used on micro:bit accessories.
 
 The goals of this module are
 
@@ -15,7 +15,7 @@ The goals of this module are
 
 And sorry, no text scrolling/number displaying yet. I'll try to figure it out in the future.
 
-The module has been tested on <b>BPI:bit v1.2</b> and <b>MicroPython for ESP32 v1.11</b>.
+The module has been tested on <b>BPI:bit v1.2</b> and <b>MicroPython for ESP32 v1.11-37</b>.
 
 ## Flash MicroPython Firmware and Upload BPIBIT.py
 
@@ -29,7 +29,7 @@ I also recommend Thonny as the MicroPython editor:
 
 [Thonny IDE](https://thonny.org/)
 
-Then remember to upload the BPIBIT.py onto your BPI:bit.
+Remember to upload the BPIBIT.py onto your BPI:bit.
 
 ## Upload MPU-9250 Library
 
@@ -37,7 +37,7 @@ The module use this library to control the onboard MPU-9250 3-axis accelerometer
 
 [MicroPython MPU-9250 (MPU-6500 + AK8963) I2C driver](https://github.com/tuupola/micropython-mpu9250) (Github)
 
-Download the .zip and upload <b>mpu9250.py</b>, <b>mpu6500.py</b> and <b>ak8963.py</b> onto your BPI:bit in the original name.
+Download the .zip file then upload <b>mpu9250.py</b>, <b>mpu6500.py</b> and <b>ak8963.py</b> onto your BPI:bit in the original name.
 
 ## Functions and Example
 
@@ -106,7 +106,9 @@ realGPIO = BPIBIT.digitalPin(pin=2)
 realGPIO = BPIBIT.analogPin(pin=2)
 ```
 
-Available digital pins are 0-16 and available analog pins are 0-7, 10-12. Note: if you tur on the WiFi of ESP32 only pin 1, 2 and 5 can b used as analog pins.
+Available digital pins are 0-16; available analog pins are 0-7, 10-12.
+
+Note: if you tur on ESP32's WiFi, only pin 1, 2 and 5 can b used as analog pins.
 
 ### Buttons and Touchpads
 
@@ -166,7 +168,7 @@ while True:
     BPIBIT.pause(100)
 ```
 
-You can use <b>BPIBIT.lightLevelL()</b> and <b>BPIBIT.lightLevelR()</b> to read the specific side.
+You can use <b>BPIBIT.lightLevelL()</b> and <b>BPIBIT.lightLevelR()</b> to get reading from a specific side.
 
 Read approximate temperature (celsius) from the NTC thermistor:
 
@@ -176,7 +178,7 @@ while True:
     BPIBIT.pause(100)
 ```
 
-As a analog sensor, the temperature reading would not be very accurate. The [NTC thermistor](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/NTC-0805-103F-3950F.pdf) has B-value of 3950 and resistence of 10KΩ on 25 celsius. Also according to [BPI:bit v1.2 hardware](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/BPI-WEBDUINO-BIT-V1_2.pdf) the thermistor has a 4K7Ω pull-down resistor.
+As an analog sensor, the temperature reading would not be very accurate. The [NTC thermistor](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/NTC-0805-103F-3950F.pdf) has B-value of 3950 and resistence of 10KΩ on 25 celsius. Also according to [BPI:bit v1.2 hardware](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/BPI-WEBDUINO-BIT-V1_2.pdf) the thermistor has a 4K7Ω pull-down resistor.
 
 Or you can simply use BPIBIT.temperatureRaw() to get the original analog value.
 
@@ -194,7 +196,7 @@ print(BPIBIT.compassHeading())
 BPIBIT.calibrateCompass()
 ```
 
-Right now the compass calibration takes 15 seconds, in which you'll have to turn the BPI:bit around in all directions.
+Right now the compass calibration takes 15 seconds, in which you'll have to turn your BPI:bit around in all directions.
 
 ## NeoPixel LED Display
 
