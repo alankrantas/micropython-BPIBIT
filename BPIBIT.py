@@ -25,9 +25,7 @@ _ledScreen = {0:4, 1:9, 2:14, 3:19, 4:24,
              15:1, 16:6, 17:11, 18:16, 19:21,
              20:0, 21:5, 22:10, 23:15, 24:20}
 _colorCodes = {'W':(16, 16, 16), 'R':(48, 0, 0), 'G':(0, 48, 0), 'B':(0, 0, 48),
-              'Y':(24, 24, 0), 'C':(0, 24, 24), 'P':(24, 0, 24), '*':(0, 0, 0),
-               'RY':(32, 16, 0), 'YG':(16, 32, 0), 'GC':(0, 32, 16), 'CB':(0, 16, 32),
-               'BP':(16, 0, 32), 'PR':(32, 0, 16)}
+              'Y':(24, 24, 0), 'C':(0, 24, 24), 'P':(24, 0, 24), '*':(0, 0, 0)}
 _tones = {'C3':130.8128, 'C3D3':138.5913, 'D3':146.8324, 'D3E3':155.5635, 'E3':164.8138, 'F3':174.6141,
          'F3G3':184.9972, 'G3':195.9977, 'G3A3':207.6523, 'A3':220.0000, 'A3B3':233.0819, 'B3':246.9417,
          'C4':261.6256, 'C4D4':277.1826, 'D4':293.6648, 'D4E4':311.1270, 'E4':329.6276, 'F4':349.2282,
@@ -170,23 +168,7 @@ def temperature():
     temp = 3950 / math.log(rt / (10000 * math.exp(-3950 / (273.15 + 25))))
     return temp - 273.15
 
-def getAK8963(calibrate):
-    if calibrate:
-        print("Calibrating compass: keep turning BPI:BIT for 15 seconds.")
-        ak8963 = AK8963(getI2C())
-        offset, scale = ak8963.calibrate(count=150, delay=100)
-        print("Calibration completed.")
-        print("AK8963 offset:")
-        print(offset)
-        print("AK8963 scale:")
-        print(scale)
-    else:
-        ak8963 = AK8963(getI2C(),
-                        offset=(13.0, 13.0, -82.0),
-                        scale=(1.0, 1.0, 1.0))
-    return ak8963
-
-_mpu9250 = MPU9250(getI2C(), ak8963=getAK8963(calibrate=False))
+_mpu9250 = MPU9250(getI2C())
 
 def acceleration(axis):
     if axis in _axisName:
@@ -216,6 +198,17 @@ def magneticForce(axis):
 
 def compassHeading():
     return (180 / math.pi) * math.atan2(magneticForce('y'), magneticForce('x'))
+
+def calibrateCompass():
+    print("Calibrating compass: keep turning BPI:BIT for 15 seconds.")
+    ak8963 = AK8963(getI2C())
+    offset, scale = ak8963.calibrate(count=150, delay=100)
+    print("Calibration completed.")
+    print("AK8963 offset:")
+    print(offset)
+    print("AK8963 scale:")
+    print(scale)
+    _mpu9250 = MPU9250(getI2C(), ak8963=ak8963)
 
 _neoPixel = NeoPixel(Pin(4, Pin.OUT), 25)
 
