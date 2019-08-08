@@ -100,7 +100,7 @@ realGPIO = BPIBIT.digitalPin(pin=2)
 realGPIO = BPIBIT.analogPin(pin=2)
 ```
 
-Available digital pins are 0-16; available analog pins are 0-7, 10-12.
+Available digital pins are 0-16; available analog pins are 0-7, 10-12. Unlike micro:bit, all these pins can be used in most situations. (Of course, Pin 5 and 11 are connected to button A/B and a buzzer on Pin 0.)
 
 Note: if you tur on ESP32's WiFi, only pin 1, 2 and 5 can b used as analog pins.
 
@@ -194,7 +194,7 @@ The parameter for acceleration(), gyroscope() and magneticForce() is 'x', 'y' or
 
 The compass calibration takes 15 seconds, in which you'll have to turn your BPI:bit around at all directions.
 
-## NeoPixel LED Display
+### 5x5 NeoPixel LED Display
 
 ```python
 BPIBIT.led(index=0, r=255, g=255, b=0)
