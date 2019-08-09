@@ -31,13 +31,13 @@ I also recommend Thonny as the MicroPython editor:
 
 Remember to upload the BPIBIT.py onto your BPI:bit.
 
-## Upload MPU-9250 Library
+## Add MPU-9250 Library
 
-The module use this library to control the onboard MPU-9250 3-axis accelerometer/3-axis gyroscope/3-axis compass:
+The module requires this library to control the onboard MPU-9250 3-axis accelerometer/3-axis gyroscope/3-axis compass:
 
 [MicroPython MPU-9250 (MPU-6500 + AK8963) I2C driver](https://github.com/tuupola/micropython-mpu9250) (Github)
 
-Download the .zip file then upload <b>mpu9250.py</b>, <b>mpu6500.py</b> and <b>ak8963.py</b> onto your BPI:bit in their original name.
+Download the .zip file, unzip then upload <b>mpu9250.py</b>, <b>mpu6500.py</b> and <b>ak8963.py</b> onto your BPI:bit in their original name.
 
 ## Functions and Example
 
@@ -76,7 +76,7 @@ ak8963.py
 BPIBIT.pause(500)
 ```
 
-### System Running Time (ms)
+### Get System Running Time (ms)
 
 ```
 timeNow = BPIBIT.runningTime()
@@ -100,7 +100,7 @@ realGPIO = BPIBIT.digitalPin(pin=2)
 realGPIO = BPIBIT.analogPin(pin=2)
 ```
 
-Available digital pins are 0-16; available analog pins are 0-7, 10-12. Unlike micro:bit, all these pins can be used in most situations. (Of course, Pin 5 and 11 are connected to button A/B and a buzzer on Pin 0.)
+Available digital pins are 0-16 (of micro:bit); available analog pins are 0-7, 10-12 (of micro:bit). Of course, Pin 5 and 11 are connected to button A/B and the buzzer is on Pin 0.
 
 Note: if you tur on ESP32's WiFi, only pin 1, 2 and 5 can b used as analog pins.
 
@@ -114,7 +114,7 @@ while True:
     BPIBIT.pause(100)
 ```
 
-Button can be <b>'A'</b>, <b>'B'</b> or <b>'AB'</b>.
+Return True/False. Button can be <b>'A'</b>, <b>'B'</b> or <b>'AB'</b>.
 
 ESP32 also supports capacitive touch. However, only Pin 0, 1 and 2 are large enough to touch by finger, and Pin 0 (GPIO 25) does not support capacitive touch.
 
@@ -138,7 +138,7 @@ BPIBIT.playTone(note='C6', delay=500)
 
 The module has built-in notes from C3 (middle C) to C7. C2 sharp/D2 flat is expressed as 'C2D2', F4 sharp/G4 flat is 'F4G4', and so on.
 
-If the delay time is set as 0 the tone won't stop.
+If the delay time set as 0 the tone won't stop.
 
 You can stop tones by using
 
@@ -154,7 +154,7 @@ BPIBIT.noTone()
 
 ### Read Light Level and Temperature
 
-Read average light level from two LDR sensors:
+Read average light level from two LDRs (light dependent resistors):
 
 ```python
 while True:
@@ -162,7 +162,7 @@ while True:
     BPIBIT.pause(100)
 ```
 
-You can use <b>BPIBIT.lightLevelL()</b> and <b>BPIBIT.lightLevelR()</b> to get reading from a specific side.
+Return value 0-1023. You can use <b>BPIBIT.lightLevelL()</b> and <b>BPIBIT.lightLevelR()</b> to get reading from either side.
 
 Read approximate temperature (celsius) from the NTC thermistor:
 
@@ -172,9 +172,9 @@ while True:
     BPIBIT.pause(100)
 ```
 
-As an analog sensor, the temperature reading would not be very accurate. The [NTC thermistor](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/NTC-0805-103F-3950F.pdf) has B-value of 3950 and resistence of 10KΩ on 25 celsius. Also according to [BPI:bit v1.2 hardware](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/BPI-WEBDUINO-BIT-V1_2.pdf) the thermistor has a 4K7Ω pull-down resistor.
+As an analog sensor, the temperature reading would not be very accurate. The [NTC thermistor](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/NTC-0805-103F-3950F.pdf) has B-value of 3950 and resistence of 10KΩ on 25 celsius. Also according to [BPI:bit v1.2 hardware](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/BPI-WEBDUINO-BIT-V1_2.pdf) the thermistor has a 4K7Ω resistor in the voltage divider circuit.
 
-Or you can simply use BPIBIT.temperatureRaw() to get the original analog value.
+Or you can simply use BPIBIT.temperatureRaw() (return 0-1023) to get the original analog value.
 
 ### Acceleration, Gyroscope and Compass
 
@@ -203,20 +203,20 @@ BPIBIT.ledCodeAll(code='G')
 BPIBIT.ledOff()
 ```
 
-Color codes are a few pre-defined colors:
+"Color codes" are a set of pre-defined colors:
 
-* W = white (R+G+B)
-* R = red
-* Y = yellow
-* G = green
-* C = cyan
-* B = blue
-* P = Purple
-* asterisk = black (off)
+* 'W' = white
+* 'R' = red
+* 'Y' = yellow
+* 'G' = green
+* 'C' = cyan
+* 'B' = blue
+* 'P' = Purple
+* '*' (asterisk) = black (off)
 
-Since the NeoPixel LEDs at full power can be very bright and hot (3 LEDs on my board are partially burnt because of this), I reduced all light levels of the color codes. You'll have to use <b>BPIBIT.led(r, g, b)</b> to set "normal" light levels.
+Note: since the NeoPixel LEDs at full power can be very bright and hot (3 LEDs on my board are partially damaged because of this), I reduced all light levels for the color codes. You'll have to use <b>BPIBIT.led(r, g, b)</b> to set brighter light levels.
 
-You can code the display pattern like this:
+You can code the display pattern like
 
 ```python
 ledArray = ['P', '*', 'B', '*', 'P',
@@ -227,10 +227,12 @@ ledArray = ['P', '*', 'B', '*', 'P',
 BPIBIT.ledCodeArray(array=ledArray)
 ```
 
-Or use the display as a dynamic bar graph:
+Or use the display as a dynamic bar graph in a specific color:
 
 ```python
-BPIBIT.plotBarGraph(value=lightLevel(), maxValue=1023, code='W')
+while True:
+    BPIBIT.plotBarGraph(value=BPIBIT.lightLevel(), maxValue=1023, code='W')
+    BPIBIT.pause(100)
 ```
 
 ### I2C
