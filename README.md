@@ -29,9 +29,27 @@ I also recommend Thonny as the MicroPython editor:
 
 [Thonny IDE](https://thonny.org/)
 
+### Very Quick Setup Tutorial
+
+Download the firmware .bin file, standard version, without SPIRAM support, then set the flash tool as below:
+
+![flash](https://user-images.githubusercontent.com/44191076/63651786-74795100-c78b-11e9-864d-d4435f677fa6.jpg)
+
+In Thonny you must go to Tools -> Options and set interpreter to MicroPython:
+
+![thonny1](https://user-images.githubusercontent.com/44191076/63651827-d46ff780-c78b-11e9-87b3-638976919beb.jpg)
+
+When the board is successfully linked you'll see the message in REPL: (If not, try to reconnect the board and click Stop/Restart several times)
+
+![thonny2](https://user-images.githubusercontent.com/44191076/63651882-60821f00-c78c-11e9-9625-995681e883e5.jpg)
+
+Open BPIBIT.py in Thonny and upload it onto your board:
+
+![thonny3](https://user-images.githubusercontent.com/44191076/63651913-9aebbc00-c78c-11e9-8e17-45fcae7b95df.jpg)
+
 Remember to upload the BPIBIT.py onto your BPI:bit.
 
-## Add MPU-9250 Library
+## Upload MPU-9250 Library
 
 The module requires this library to control the onboard MPU-9250 3-axis accelerometer/3-axis gyroscope/3-axis compass:
 
@@ -47,7 +65,7 @@ To use the module, simply import it:
 import BPIBIT
 ```
 
-You can checkout some board information by using
+You can checkout basic board information by using
 
 ```python
 BPIBIT.help()
