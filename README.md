@@ -3,19 +3,19 @@
 ![153543457141539355s6op3](https://user-images.githubusercontent.com/44191076/62682966-f88fb280-b9ef-11e9-83e4-47976fa68350.jpg)
 ![800x423xBPI_bit_interfact JPG pagespeed ic NngFYTGX_e](https://user-images.githubusercontent.com/44191076/62682983-047b7480-b9f0-11e9-8b0e-e7c8cc24b677.jpg)
 
-This is purly a free personal project, I didn't get sponsorship or contact from Banana Pi, Webduino or whoever made this board.
+This is a free personal project, I didn't get sponsorship or contact from Banana Pi, Webduino or whoever made this board.
 
 [BPI:bit](http://wiki.banana-pi.org/BPI-Bit) (or Web:bit) is a ESP32 board made in the style of [BBC micro:bit](https://tech.microbit.org/hardware/); the edge connectors allow it can be used on micro:bit accessories.
 
-The goals of this module are
+The objectives of this module are
 
-* can be used under standard MicroPython firmware;
-* Pins can be referenced by micro:bit pin numbers, which will be remapped to corresponding ESP32 pins;
-* many functions are also named after their equivalents in micro:bit's MakeCode JavaScript Block editor.
+* can be used under standard MicroPython ESP32 firmware, which can be integrated with lots of MicroPython libraries;
+* Pins can be referenced via micro:bit pin numbers, which is easier to remember and will be mapped to corresponding ESP32 pins;
+* most functions are also named after their equivalents in micro:bit's MakeCode JavaScript Block editor.
 
-And sorry, no text scrolling/number displaying yet. I'll try to figure it out in the future.
+And sorry, no text scrolling/number displaying. I'll try to figure it out in the future. MicroPython also does not support Bluetooth-related functions yet.
 
-The module has been tested on <b>BPI:bit v1.2</b> and <b>MicroPython for ESP32 v1.11-37</b>.
+This module has been tested on <b>BPI:bit v1.2</b> and <b>MicroPython for ESP32 v1.11-37</b>.
 
 ## Flash MicroPython Firmware and Upload BPIBIT.py
 
@@ -124,7 +124,7 @@ realGPIO = BPIBIT.analogPin(pin=2)
 
 Available digital pins are 0-16 (of micro:bit); available analog pins are 0-7, 10-12 (of micro:bit). Of course, Pin 5 and 11 are connected to button A/B and the buzzer is on Pin 0.
 
-Note: if you tur on ESP32's WiFi, only pin 1, 2 and 5 can b used as analog pins.
+Note: if you tur on ESP32's WiFi, only pin 1, 2 and 5 can be used as analog pins. See [ESP32 Pinout Reference](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/) for more details.
 
 ### Buttons and Touchpads
 
