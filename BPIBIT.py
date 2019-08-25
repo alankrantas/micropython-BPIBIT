@@ -40,15 +40,18 @@ _axisName = {'x':0, 'y':1, 'z':2}
 
 # functions
 
-def systemInfo():
-    print("System: " + str(uos.uname()[4]))
-    print("MicroPython firmware: " + str(uos.uname()[3]))
-    print("CPU: " + str(machine.freq()) + " Hz")
-    print("Memory status:")
+def help():
+    print("MicroPython module for BPI:BIT by Alan Wang")
+    print("- Online doc/source: github.com/alankrantas/micropython-BPIBIT")
+    print("- Board: " + str(uos.uname()[4]))
+    print("- Firmware: " + str(uos.uname()[3]))
+    print("- CPU: " + str(machine.freq()) + " Hz")
+    print("- Memory status:")
     print(micropython.mem_info())
-    print("Uploaded files: ")
+    print("- Uploaded files: ")
     for file in uos.listdir():
         print(file)
+    print("--------------------------------------------------")
 
 def getI2C():
     return I2C(scl=Pin(_digitalPins[19]), sda=Pin(_digitalPins[20]), freq=400000)
@@ -255,3 +258,4 @@ def plotBarGraph(value, maxValue, code):
 lefOff()
 noTone()
 gc.enable()
+gc.collect()
