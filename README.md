@@ -29,9 +29,11 @@ I also recommend Thonny as the MicroPython editor:
 
 [Thonny IDE](https://thonny.org/)
 
+Remember to upload the BPIBIT.py onto your BPI:bit.
+
 ### Very Quick Setup Tutorial
 
-Download the firmware .bin file, standard version, without SPIRAM support, then set the flash tool as below:
+Download the firmware .bin file, standard version, without SPIRAM support, then set the flash tool as below (select the COM or communication port which your board is connected):
 
 ![flash](https://user-images.githubusercontent.com/44191076/63651786-74795100-c78b-11e9-864d-d4435f677fa6.jpg)
 
@@ -39,15 +41,13 @@ In Thonny you must go to Tools -> Options and set interpreter to MicroPython:
 
 ![thonny1](https://user-images.githubusercontent.com/44191076/63651827-d46ff780-c78b-11e9-87b3-638976919beb.jpg)
 
-When the board is successfully linked you'll see the message in REPL: (If not, try to reconnect the board and click Stop/Restart several times)
+When the board is successfully linked you'll see the message below in REPL: (If not, try to reconnect the board and click Stop/Restart several times.)
 
 ![thonny2](https://user-images.githubusercontent.com/44191076/63651882-60821f00-c78c-11e9-9625-995681e883e5.jpg)
 
-Open BPIBIT.py in Thonny and upload it onto your board:
+Finally open BPIBIT.py in Thonny and upload it onto your board:
 
 ![thonny3](https://user-images.githubusercontent.com/44191076/63651913-9aebbc00-c78c-11e9-8e17-45fcae7b95df.jpg)
-
-Remember to upload the BPIBIT.py onto your BPI:bit.
 
 ## Upload MPU-9250 Library
 
@@ -267,7 +267,7 @@ i2c = BPIBIT.getI2C()
 
 ### SPI
 
-I didn't implement SPI functions, since the settings may differ depending on the hardwares.
+I didn't implement SPI functions, since the settings may differ depending on hardwares. Below is some example modified from official documents:
 
 ```python
 import BPIBIT
@@ -289,4 +289,8 @@ vspi = SPI(2, baudrate=80000000, polarity=0, phase=0, bits=8, firstbit=0,
            miso=Pin(BPIBIT.digitalPin[14]))
 ```
 
-The first spi variable is using software SPI bus. ESP32 also support two faster hardward SPI bus, hspi and vspi, which the hardwares have to connect specific pins as above. See [here](http://docs.micropython.org/en/latest/esp32/quickref.html#software-spi-bus) and [here](http://docs.micropython.org/en/latest/library/machine.SPI.html#machine-spi) for more information.
+The first spi variable is software SPI bus. ESP32 also support two faster hardward SPI bus, hspi and vspi, which the hardwares have to connect to specific pins. See [here](http://docs.micropython.org/en/latest/esp32/quickref.html#software-spi-bus) and [here](http://docs.micropython.org/en/latest/library/machine.SPI.html#machine-spi) for more information.
+
+### Garbage Collection (GC)
+
+The module enables auto garbage collection on start.
