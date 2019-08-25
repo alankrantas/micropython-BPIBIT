@@ -5,35 +5,23 @@
 
 This is a free personal project, I didn't get sponsorship or contact from Banana Pi, Webduino or whoever made this board.
 
-[BPI:bit](http://wiki.banana-pi.org/BPI-Bit) (or Web:bit) is a ESP32 board made in the style of [BBC micro:bit](https://tech.microbit.org/hardware/); the edge connectors allow it can be used on micro:bit accessories.
+[BPI:bit](http://wiki.banana-pi.org/BPI-Bit) (or Web:bit) is a ESP32 board made in the style of [BBC micro:bit](https://tech.microbit.org/hardware/); the edge connectors allow it to be used on micro:bit accessories.
 
 The objectives of this module are
 
 * can be used under standard MicroPython ESP32 firmware, which can be integrated with lots of MicroPython libraries;
-* Pins can be referenced via micro:bit pin numbers, which is easier to remember and will be mapped to corresponding ESP32 pins;
+* pins can be referenced via micro:bit pin numbers, which is easier to remember and will be mapped to corresponding ESP32 pins;
 * most functions are also named after their equivalents in micro:bit's MakeCode JavaScript Block editor.
 
-And sorry, no text scrolling/number displaying. I'll try to figure it out in the future. MicroPython also does not support Bluetooth-related functions yet.
+And sorry, no text scrolling/number displaying. I'll try to figure it out in the future. MicroPython also currently does not support Bluetooth-related functions.
 
 This module has been tested on <b>BPI:bit v1.2</b> and <b>MicroPython for ESP32 v1.11-37</b>.
 
 ## Flash MicroPython Firmware and Upload BPIBIT.py
 
-You'll first need to flash firmware of MicroPython for ESP32 onto your BPI:bit:
+You'll first need to flash [firmware](http://micropython.org/download) of MicroPython for ESP32 by using [flash tool](https://www.espressif.com/en/support/download/other-tools) onto your BPI:bit. I also recommend [Thonny IDE](https://thonny.org/) as the MicroPython editor and library uploader.
 
-[Firmware](http://micropython.org/download)
-
-[Flash tool](https://www.espressif.com/en/support/download/other-tools)
-
-I also recommend Thonny as the MicroPython editor:
-
-[Thonny IDE](https://thonny.org/)
-
-Remember to upload the BPIBIT.py onto your BPI:bit.
-
-### Very Quick Setup Tutorial
-
-Download the firmware .bin file, standard version, without SPIRAM support, then set the flash tool as below (select the COM or communication port which your board is connected):
+First download the firmware .bin file, standard version, without SPIRAM support, then set the flash tool as below (select the COM or communication port which your board is connected):
 
 ![flash](https://user-images.githubusercontent.com/44191076/63651786-74795100-c78b-11e9-864d-d4435f677fa6.jpg)
 
@@ -115,7 +103,7 @@ result = BPIBIT.analogReadPin(pin=2)
 BPIBIT.analogWritePin(pin=2, value=1023)
 ```
 
-You can also query the real pin by using
+You can also query the real pin number by using
 
 ```python
 realGPIO = BPIBIT.digitalPin(pin=2)
@@ -136,9 +124,9 @@ while True:
     BPIBIT.pause(100)
 ```
 
-Return True/False. Button can be <b>'A'</b>, <b>'B'</b> or <b>'AB'</b>.
+Return True/False. Button can be <b>'A'</b>, <b>'B'</b> or <b>'AB'</b> (both).
 
-ESP32 also supports capacitive touch. However, only Pin 0, 1 and 2 are large enough to touch by finger, and Pin 0 (GPIO 25) does not support capacitive touch.
+ESP32 also supports capacitive touch. However, only Pin 0, 1 and 2 are large enough to touch by finger, and Pin 0 (GPIO 25) does not support capacitive touch. Hence in this module only pin 1 and 2 supports capacitive touch.
 
 ```python
 print(BPIBIT.pinIsTouched(pin=2))
@@ -146,7 +134,7 @@ print(BPIBIT.pinIsTouched(pin=2))
 
 ### Buzzer and Tone
 
-You can play a tone via the onboard buzzer:
+You can play a tone of specific frequency via the onboard buzzer:
 
 ```python
 BPIBIT.analogPitch(freq=1047, delay=500)
@@ -196,7 +184,7 @@ while True:
 
 As an analog sensor, the temperature reading would not be very accurate. The [NTC thermistor](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/NTC-0805-103F-3950F.pdf) has B-value of 3950 and resistence of 10KΩ on 25 celsius. Also according to [BPI:bit v1.2 hardware](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/BPI-WEBDUINO-BIT-V1_2.pdf) the thermistor has a 4K7Ω resistor in the voltage divider circuit.
 
-Or you can simply use BPIBIT.temperatureRaw() (return 0-1023) to get the original analog value.
+Or you can simply use <b>BPIBIT.temperatureRaw()</b> (return 0-1023) to get the original analog value.
 
 ### Acceleration, Gyroscope and Compass
 
@@ -214,7 +202,7 @@ BPIBIT.calibrateCompass()
 
 The parameter for acceleration(), gyroscope() and magneticForce() is 'x', 'y' or 'z'.
 
-The compass calibration takes 15 seconds, in which you'll have to turn your BPI:bit around at all directions.
+Compass calibration takes 15 seconds, in which you'll have to turn your BPI:bit around at all directions and better away from magnetic fields.
 
 ### 5x5 NeoPixel LED Display
 
@@ -236,7 +224,7 @@ BPIBIT.ledOff()
 * 'P' = Purple
 * '*' (asterisk) = black (off)
 
-Note: since the NeoPixel LEDs at full power can be very bright and hot (3 LEDs on my board are partially damaged because of this), I reduced all light levels for the color codes. You'll have to use <b>BPIBIT.led(r, g, b)</b> to set brighter light levels.
+Note: since the NeoPixel LEDs at full power can be very bright and hot (3 LEDs on my board are partially damaged because of this), <b>all led's light levels are greatly reduced under color codes</b>. You'll have to use <b>BPIBIT.led(r, g, b)</b> to set brighter light levels.
 
 You can code the display pattern like
 
@@ -249,7 +237,7 @@ ledArray = ['P', '*', 'B', '*', 'P',
 BPIBIT.ledCodeArray(array=ledArray)
 ```
 
-Or use the display as a dynamic bar graph in a specific color:
+Or use the display as a dynamic progress bar graph in a specific color:
 
 ```python
 while True:
