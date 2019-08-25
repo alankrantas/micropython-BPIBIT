@@ -50,35 +50,39 @@ import BPIBIT
 You can checkout some board information by using
 
 ```python
-print(BPIBIT.systemInfo())
+BPIBIT.help()
 ```
 
-You'll get something like
+You'll get something in the REPL like
 
 ```
-System: ESP32 module with ESP32
-MicroPython firmware: v1.11-37-g62f004ba4 on 2019-06-06
-CPU: 240000000 Hz
-Memory status:
+MicroPython module for BPI:BIT by Alan Wang
+- Online doc/source: github.com/alankrantas/micropython-BPIBIT
+- Board: ESP32 module with ESP32
+- Firmware: v1.11-37-g62f004ba4 on 2019-06-06
+- CPU: 240000000 Hz
+- Memory status:
 stack: 1008 out of 15360
-GC: total: 121088, used: 26816, free: 94272
- No. of 1-blocks: 347, 2-blocks: 64, max blk sz: 264, max free sz: 3263
+GC: total: 121088, used: 26528, free: 94560
+ No. of 1-blocks: 333, 2-blocks: 55, max blk sz: 264, max free sz: 3593
 None
-Uploaded files: 
-mpu9250.py
+- Uploaded files: 
+boot.py
+BPIBIT.py
 mpu6500.py
+mpu9250.py
 ak8963.py
 ```
 
 ### Pause/Delay/Wait (ms)
 
-```
+```python
 BPIBIT.pause(500)
 ```
 
 ### Get System Running Time (ms)
 
-```
+```python
 timeNow = BPIBIT.runningTime()
 ```
 
