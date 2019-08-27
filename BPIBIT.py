@@ -89,7 +89,7 @@ def digitalReadPin(pin):
     else:
         return 0
 
-def digitalWritePin(pin, value):
+def digitalWritePin(pin, value=0):
     if (value is 0 or value is 1) and pin in _digitalPins:
         Pin(_digitalPins[pin], Pin.OUT).value(value)
 
@@ -101,11 +101,14 @@ def analogReadPin(pin):
     else:
         return 0
 
-def analogWritePin(pin, value):
+def analogWritePin(pin, value=0):
     if value >= 0 and value <= 1023 and pin in _analogPins:
-        pwm = PWM(Pin(_analogPins[pin]))
-        pwm.freq(5000)
-        pwm.duty(value)
+        pwm = PWM(Pin(_analogPins[pin]), freq=5000, duty=value)
+
+def servoWritePin(pin, degree=77):
+    if degree >= 0 and degree <= 180 and pin in _analogPins:
+        actual_degree = int(degree * (122 - 30) / 180 + 30)
+        servo = PWM(Pin(_analogPins[pin]), freq=50, duty=actual_degree)
 
 def onButtonPressed(button):
     if button == 'AB':
@@ -123,7 +126,7 @@ def pinIsTouched(pin):
     else:
         return False
 
-def analogPitch(freq, delay):
+def analogPitch(freq=0, delay=0):
     buzzer = PWM(Pin(_analogPins[0], Pin.OUT), freq=round(freq), duty=512)
     if delay > 0:
         if delay > 10:
@@ -134,7 +137,7 @@ def analogPitch(freq, delay):
             pause(delay)
             buzzer.deinit()
 
-def playTone(note, delay):
+def playTone(note='-', delay=0):
     if note in _tones:
         buzzer = PWM(Pin(_analogPins[0], Pin.OUT), freq=round(_tones[note]), duty=512)
         if delay > 0:
@@ -182,8 +185,10 @@ def temperature():
 
 _mpu9250 = MPU9250(getI2C())
 
-def acceleration(axis):
-    if axis in _axisName:
+def acceleration(axis=''):
+    if axis == '':
+        return abs(_mpu9250.acceleration[_axisName['x']]) + abs(_mpu9250.acceleration[_axisName['y']]) + abs(_mpu9250.acceleration[_axisName['x']])
+    elif axis in _axisName:
         return _mpu9250.acceleration[_axisName[axis]]
     else:
         return 0
@@ -202,8 +207,10 @@ def gyroscope(axis):
     else:
         return 0
 
-def magneticForce(axis):
-    if axis in _axisName:
+def magneticForce(axis=''):
+    if axis == '':
+        return abs(_mpu9250.magnetic[_axisName['x']]) + abs(_mpu9250.magnetic[_axisName['y']]) + abs(_mpu9250.magnetic[_axisName['z']])
+    elif axis in _axisName:
         return _mpu9250.magnetic[_axisName[axis]]
     else:
         return 0
@@ -224,12 +231,13 @@ def calibrateCompass():
 
 _neoPixel = NeoPixel(Pin(4, Pin.OUT), 25)
 
-def led(index, r, g, b):
-    _neoPixel[_ledScreen[index]] = (r, g, b)
-    _neoPixel.write()
+def led(index, r=0, g=0, b=0):
+    if index >= 0 and index < 25:
+        _neoPixel[_ledScreen[index]] = (r, g, b)
+        _neoPixel.write()
     
 def ledCode(index, code):
-    if code in _colorCodes:
+    if index >= 0 and index < 25 and code in _colorCodes:
         _neoPixel[_ledScreen[index]] = _colorCodes[code]
         _neoPixel.write()
 
@@ -248,7 +256,7 @@ def ledCodeArray(array):
 def lefOff():
     ledCodeAll('*')
 
-def plotBarGraph(value, maxValue, code='W'):
+def plotBarGraph(value=0, maxValue=1023, code='W'):
     if value >= 0 and maxValue > 0 and value <= maxValue:
         p = value / maxValue
         valueArray = [0.96, 0.88, 0.84, 0.92, 1.00,
