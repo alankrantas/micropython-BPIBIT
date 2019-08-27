@@ -118,7 +118,7 @@ Note: if you tur on ESP32's WiFi, only pin 1, 2 and 5 can be used as analog pins
 
 ### Servo Control
 
-Control a servo from one of the digital pins via PWM, which can be set to degrees 0-180. Note: the degrees may not be precisely 180 degrees.
+Control a servo from one of the digital pins via PWM, which can be set to degrees 0-180. Note: the actual turning range may not be precisely 180 degrees.
 
 ```python
 while True:
@@ -214,7 +214,7 @@ print(BPIBIT.compassHeading())
 BPIBIT.calibrateCompass()
 ```
 
-The parameter for <b>acceleration()</b>, <b>gyroscope()</b> and <b>magneticForce()</b> is <b>'x'</b>, <b>'y'</b> or <b>'z'</b>.
+The parameter for <b>acceleration()</b>, <b>gyroscope()</b> and <b>magneticForce()</b> is <b>'x'</b>, <b>'y'</b> or <b>'z'</b>. If you omit the parameter in acceleration and magneticForce functions you'll get total absolute sum from all 3 axis (the strength of acceleration/magnetic force).
 
 Compass calibration takes 15 seconds, in which you'll have to turn your BPI:bit around at all directions and better away from magnetic fields.
 
