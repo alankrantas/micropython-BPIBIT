@@ -112,9 +112,21 @@ realGPIO = BPIBIT.digitalPin(pin=2)
 pin = Pin(realGPIO, PIN.OUT)
 ```
 
-Available digital pins are 0-16 (of micro:bit); available analog pins are 0-7, 10-12 (of micro:bit). Of course, Pin 5 and 11 are connected to button A/B and the buzzer is on Pin 0.
+Available digital pins for output/input are 0-16 (of micro:bit); available analog pins for innput are 0-7, 10-12 (of micro:bit). Analog pins for output (PWM) are as same as digital ones. Of course, Pin 5 and 11 are already connected to button A/B and the buzzer is on Pin 0.
 
 Note: if you tur on ESP32's WiFi, only pin 1, 2 and 5 can be used as analog pins. See [ESP32 Pinout Reference](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/) for more details.
+
+### Servo Control
+
+Control a servo from one of the digital pins via PWM, which can be set to degrees 0-180. Note: the degrees may not be precisely 180 degrees.
+
+```python
+while True:
+    BPIBIT.servoWritePin(2, 0)
+    BPIBIT.pause(1000)
+    BPIBIT.servoWritePin(2, 180)
+    BPIBIT.pause(1000)
+```
 
 ### Buttons and Touchpads
 
