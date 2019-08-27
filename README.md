@@ -98,16 +98,18 @@ Read the signal of Pin 2 (of micro:bit), which would be remapped to GPIO 33 on E
 
 ```python
 result = BPIBIT.digitalReadPin(pin=2)
-BPIBIT.digitalWritePin(pin=2, value=0)
 result = BPIBIT.analogReadPin(pin=2)
+BPIBIT.digitalWritePin(pin=2, value=1)
 BPIBIT.analogWritePin(pin=2, value=1023)
 ```
 
 You can also query the real pin number by using
 
 ```python
+from machine import Pin
+
 realGPIO = BPIBIT.digitalPin(pin=2)
-realGPIO = BPIBIT.analogPin(pin=2)
+pin = Pin(realGPIO, PIN.OUT)
 ```
 
 Available digital pins are 0-16 (of micro:bit); available analog pins are 0-7, 10-12 (of micro:bit). Of course, Pin 5 and 11 are connected to button A/B and the buzzer is on Pin 0.
@@ -146,9 +148,9 @@ Or use music notes:
 BPIBIT.playTone(note='C6', delay=500)
 ```
 
-The module has built-in notes from C3 (middle C) to C7. C2 sharp/D2 flat is expressed as 'C2D2', F4 sharp/G4 flat is 'F4G4', and so on.
+The module has built-in notes from <b>C3</b> (middle C) to <b>C7</b>. <b>C2 sharp/D2 flat</b> is expressed as <b>'C2D2'</b>, <b>F4 sharp/G4 flat</b> is <b>'F4G4'</b>, and so on.
 
-If the delay time set as 0 the tone won't stop.
+If the delay time set as <b>0</b> the tone won't stop.
 
 You can stop tones by using
 
@@ -200,7 +202,7 @@ print(BPIBIT.compassHeading())
 BPIBIT.calibrateCompass()
 ```
 
-The parameter for acceleration(), gyroscope() and magneticForce() is 'x', 'y' or 'z'.
+The parameter for <b>acceleration()</b>, <b>gyroscope()</b> and <b>magneticForce()</b> is <b>'x'</b>, <b>'y'</b> or <b>'z'</b>.
 
 Compass calibration takes 15 seconds, in which you'll have to turn your BPI:bit around at all directions and better away from magnetic fields.
 
@@ -237,13 +239,17 @@ ledArray = ['P', '*', 'B', '*', 'P',
 BPIBIT.ledCodeArray(array=ledArray)
 ```
 
-Or use the display as a dynamic progress bar graph in a specific color:
+## LED Progress Bar Graph
+
+You can also use the display as a dynamic progress bar graph in a specific color:
 
 ```python
 while True:
     BPIBIT.plotBarGraph(value=BPIBIT.lightLevel(), maxValue=1023, code='W')
     BPIBIT.pause(100)
 ```
+
+If you omit the parameter "code" the default LED color would be white ('W').
 
 ### I2C
 
@@ -255,29 +261,21 @@ i2c = BPIBIT.getI2C()
 
 ### SPI
 
-I didn't implement SPI functions, since the settings may differ depending on hardwares. Below is some example modified from official documents:
+There are 3 types of SPI: software SPI on any 3 pins, and two hardware SPI channels on specific pins. Hardware SPI can run faster than software ones, however the actual speed you use is depending on the SPI device(s). See [here](http://docs.micropython.org/en/latest/esp32/quickref.html#software-spi-bus) and [here](http://docs.micropython.org/en/latest/library/machine.SPI.html#machine-spi) for more information.
 
 ```python
-import BPIBIT
-from machine import Pin, SPI
+# software SPI
+spi = BPIBIT.getSPI(sck=0, miso=1, mosi=2)
+spi = BPIBIT.getSPI(sck=0, miso=1, mosi=2, baudrate=100000, polarity=1, phase=0)
 
-spi = SPI(baudrate=100000, polarity=1, phase=0,
-          sck=Pin(BPIBIT.digitalPin[0]),
-          mosi=Pin(BPIBIT.digitalPin[1]),
-          miso=Pin(BPIBIT.digitalPin[2]))
-          
-hspi = SPI(1, baudrate=10000000,
-           sck=Pin(BPIBIT.digitalPin[7]),
-           mosi=Pin(BPIBIT.digitalPin[3]),
-           miso=Pin(BPIBIT.digitalPin[6]))
-           
-vspi = SPI(2, baudrate=80000000, polarity=0, phase=0, bits=8, firstbit=0,
-           sck=Pin(BPIBIT.digitalPin[13]),
-           mosi=Pin(BPIBIT.digitalPin[15]),
-           miso=Pin(BPIBIT.digitalPin[14]))
+# hardware SPI 1: sck=7, miso=6, mosi=3 of micro:bit pins
+hspi = BPIBIT.getHSPI()
+hspi = BPIBIT.getHSPI(baudrate=10000000, polarity=1, phase=0)
+
+# hardware SPI 2: sck=13, miso=14, mosi=15 of micro:bit pins
+vspi = BPIBIT.getHSPI()
+vspi = BPIBIT.getHSPI(baudrate=10000000, polarity=1, phase=0)
 ```
-
-The first spi variable is software SPI bus. ESP32 also support two faster hardward SPI bus, hspi and vspi, which the hardwares have to connect to specific pins. See [here](http://docs.micropython.org/en/latest/esp32/quickref.html#software-spi-bus) and [here](http://docs.micropython.org/en/latest/library/machine.SPI.html#machine-spi) for more information.
 
 ### Garbage Collection (GC)
 
