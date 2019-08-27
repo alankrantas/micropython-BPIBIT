@@ -83,12 +83,6 @@ def digitalPin(pin):
     else:
         return None
 
-def analogPin(pin):
-    if pin in _analogPins:
-        return _analogPins[pin]
-    else:
-        return None
-
 def digitalReadPin(pin):
     if pin in _digitalPins:
         return Pin(_digitalPins[pin], Pin.IN).value()
