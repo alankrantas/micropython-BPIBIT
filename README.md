@@ -118,13 +118,13 @@ Note: if you tur on ESP32's WiFi, only pin 1, 2 and 5 can be used as analog pins
 
 ### Servo Control
 
-Control a servo from one of the digital pins via PWM, which can be set to degrees 0-180. Note: the actual turning range may not be precisely 180 degrees.
+Control a servo from one of the digital pins via PWM, which can be set to 0-180 degrees. Note: the actual turning range may not be precisely 180 degrees.
 
 ```python
 while True:
-    BPIBIT.servoWritePin(2, 0)
+    BPIBIT.servoWritePin(pin=2, degree=0)
     BPIBIT.pause(1000)
-    BPIBIT.servoWritePin(2, 180)
+    BPIBIT.servoWritePin(pin=2, degree=180)
     BPIBIT.pause(1000)
 ```
 
@@ -251,7 +251,7 @@ ledArray = ['P', '*', 'B', '*', 'P',
 BPIBIT.ledCodeArray(array=ledArray)
 ```
 
-## LED Progress Bar Graph
+### LED Progress Bar Graph
 
 You can also use the display as a dynamic progress bar graph in a specific color:
 
