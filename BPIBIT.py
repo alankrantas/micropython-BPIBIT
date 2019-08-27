@@ -56,7 +56,22 @@ def help():
 def getI2C():
     return I2C(scl=Pin(_digitalPins[19]), sda=Pin(_digitalPins[20]), freq=400000)
 
-def pause(delay):
+def getSPI(sck, miso, mosi, baudrate=100000, polarity=1, phase=0):
+    if {sck, miso, mosi} and _digitalPins:
+        return SPI(baudrate=baudrate, polarity=polarity, phase=phase,
+                   sck=Pin(_digitalPins[sck]), mosi=Pin(_digitalPins[mosi]), miso=Pin(_digitalPins[miso]))
+    else:
+        return None
+
+def getHSPI(baudrate=10000000, polarity=1, phase=0):
+    return SPI(1, baudrate=baudrate, polarity=polarity, phase=phase, 
+               sck=Pin(_digitalPins[7]), mosi=Pin(_digitalPins[3]), miso=Pin(_digitalPins[6]))
+
+def getVSPI(baudrate=10000000, polarity=1, phase=0):
+    return SPI(2, baudrate=baudrate, polarity=polarity, phase=phase, 
+               sck=Pin(_digitalPins[13]), mosi=Pin(_digitalPins[15]), miso=Pin(_digitalPins[14]))
+
+def pause(delay=100):
     utime.sleep_ms(delay)
 
 def runningTime():
@@ -66,13 +81,13 @@ def digitalPin(pin):
     if pin in _digitalPins:
         return _digitalPins[pin]
     else:
-        return 0
+        return None
 
 def analogPin(pin):
     if pin in _analogPins:
         return _analogPins[pin]
     else:
-        return 0
+        return None
 
 def digitalReadPin(pin):
     if pin in _digitalPins:
@@ -189,7 +204,7 @@ def rotationRoll():
 
 def gyroscope(axis):
     if axis in _axisName:
-        return _mpu9250.gyro[_axisName[axis]] / (180 / math.pi)
+        return _mpu9250.gyro[_axisName[axis]]
     else:
         return 0
 
@@ -239,14 +254,14 @@ def ledCodeArray(array):
 def lefOff():
     ledCodeAll('*')
 
-def plotBarGraph(value, maxValue, code):
+def plotBarGraph(value, maxValue, code='W'):
     if value >= 0 and maxValue > 0 and value <= maxValue:
         p = value / maxValue
-        valueArray = [0.84, 0.88, 0.92, 0.96, 1.00,
-                      0.64, 0.68, 0.72, 0.76, 0.80,
-                      0.44, 0.48, 0.52, 0.56, 0.60,
-                      0.24, 0.28, 0.32, 0.36, 0.40,
-                      0.04, 0.08, 0.12, 0.16, 0.20]
+        valueArray = [0.96, 0.88, 0.84, 0.92, 1.00,
+                      0.76, 0.68, 0.64, 0.72, 0.80,
+                      0.56, 0.48, 0.44, 0.52, 0.60,
+                      0.36, 0.28, 0.24, 0.32, 0.40,
+                      0.16, 0.08, 0.04, 0.12, 0.20]
         ledArray = []
         for i in range(25):
             if p >= valueArray[i]:
