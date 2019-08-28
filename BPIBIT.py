@@ -272,7 +272,7 @@ def plotBarGraph(value=0, maxValue=1023, code='W'):
                 ledArray.append('*')
         ledCodeArray(ledArray)
 
-lefOff()
+ledOff()
 noTone()
 gc.enable()
 gc.collect()
