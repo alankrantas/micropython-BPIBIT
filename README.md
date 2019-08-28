@@ -15,7 +15,7 @@ The objectives of this module are
 
 And sorry, no text scrolling/number displaying. I'll try to figure it out in the future. MicroPython also currently does not support Bluetooth-related functions.
 
-This module has been tested on <b>BPI:bit v1.2</b> and <b>MicroPython for ESP32 v1.11-37</b>.
+This module has been tested on <b>BPI:bit v1.4</b> and <b>MicroPython for ESP32 v1.11-37</b>.
 
 ## Flash MicroPython Firmware and Upload BPIBIT.py
 
@@ -196,7 +196,7 @@ while True:
     BPIBIT.pause(100)
 ```
 
-As an analog sensor, the temperature reading would not be very accurate. The [NTC thermistor](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/NTC-0805-103F-3950F.pdf) has B-value of 3950 and resistence of 10KΩ on 25 celsius. Also according to [BPI:bit v1.2 hardware](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/BPI-WEBDUINO-BIT-V1_2.pdf) the thermistor has a 4K7Ω resistor in the voltage divider circuit.
+As an analog sensor, the temperature reading would not be very accurate. The [NTC thermistor](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/NTC-0805-103F-3950F.pdf) has B-value of 3950 and resistence of 10KΩ on 25 celsius. Also according to [BPI:bit v1.4 hardware](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/BPI-WEBDUINO-BIT-V1_4.pdf) the thermistor has a 5.1KΩ resistor in the voltage divider circuit. However using 4.7KΩ value (in [v1.2](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/BPI-WEBDUINO-BIT-V1_2.pdf)) to calculate seems to be more accurate than 5.1KΩ. 
 
 Or you can simply use <b>BPIBIT.temperatureRaw()</b> (return 0-1023) to get the original analog value.
 
