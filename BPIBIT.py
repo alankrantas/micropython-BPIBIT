@@ -253,7 +253,7 @@ def ledCodeArray(array):
             _neoPixel[i] = _colorCodes[array[_ledScreen[i]]]
     _neoPixel.write()
 
-def lefOff():
+def ledOff():
     ledCodeAll('*')
 
 def plotBarGraph(value=0, maxValue=1023, code='W'):
