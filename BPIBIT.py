@@ -2,14 +2,9 @@
 # https://micropython.org/download
 # http://docs.micropython.org/en/latest/esp32/quickref.html#
 # http://wiki.banana-pi.org/BPI-Bit
-import machine
+import machine, micropython, math, uos, utime, gc
 from machine import Pin, TouchPad, ADC, PWM, I2C, SPI
 from neopixel import NeoPixel
-import micropython
-import math
-import uos
-import utime
-import gc
 
 # MPU9250 (MPU6500 + AK8963): https://github.com/tuupola/micropython-mpu9250
 from mpu9250 import MPU9250
@@ -39,7 +34,6 @@ _tones = {'C3':130.8128, 'C3D3':138.5913, 'D3':146.8324, 'D3E3':155.5635, 'E3':1
 _axisName = {'x':0, 'y':1, 'z':2}
 
 # functions
-
 def help():
     print("MicroPython module for BPI:BIT by Alan Wang")
     print("- Online doc/source: github.com/alankrantas/micropython-BPIBIT")
@@ -176,10 +170,10 @@ _thermistor.atten(ADC.ATTN_11DB)
 def temperatureRaw():
     return _thermistor.read() // 4
 
-def temperature():
+def temperature(rntc=5100):
     # see https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/NTC-0805-103F-3950F.pdf
     vOut = _thermistor.read() / 4095 * 3.3
-    rt = 3.3 * 4700 / vOut - 4700
+    rt = 3.3 * rntc / vOut - rntc
     temp = 3950 / math.log(rt / (10000 * math.exp(-3950 / (273.15 + 25))))
     return temp - 273.15
 
