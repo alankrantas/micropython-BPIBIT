@@ -196,7 +196,15 @@ while True:
     BPIBIT.pause(100)
 ```
 
-As an analog sensor, the temperature reading would not be very accurate. The [NTC thermistor](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/NTC-0805-103F-3950F.pdf) has B-value of 3950 and resistence of 10KΩ on 25 celsius. Also according to [BPI:bit v1.4 hardware](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/BPI-WEBDUINO-BIT-V1_4.pdf) the thermistor has a 5.1KΩ resistor in the voltage divider circuit. However using 4.7KΩ value (in [v1.2](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/BPI-WEBDUINO-BIT-V1_2.pdf)) to calculate seems to be more accurate than 5.1KΩ. 
+As an analog sensor, the temperature reading would not be very accurate. The [NTC thermistor](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/NTC-0805-103F-3950F.pdf) has B-value of 3950 and resistence of 10KΩ on 25 celsius. Also according to [BPI:bit v1.4 hardware](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/BPI-WEBDUINO-BIT-V1_4.pdf) the thermistor has a 5.1KΩ resistor in the voltage divider circuit. However the reading may be lower until the board itself warm up.
+
+If you want to get somewhat more accurate readings before the board warm up, you can call
+
+'''python
+print(BPIBIT.temperature(rntc=4700))
+'''
+
+To set the resistor value in the voltage divider circuit as 4.7KΩ instead of 5.1KΩ (the actual resistor is still 5.1KΩ), which makes the reading higher.
 
 Or you can simply use <b>BPIBIT.temperatureRaw()</b> (return 0-1023) to get the original analog value.
 
