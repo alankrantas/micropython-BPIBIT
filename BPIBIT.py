@@ -97,12 +97,12 @@ def analogReadPin(pin):
 
 def analogWritePin(pin, value=0):
     if value >= 0 and value <= 1023 and pin in _digitalPins:
-        pwm = PWM(Pin(_analogPins[pin]), freq=5000, duty=value)
+        pwm = PWM(Pin(_digitalPins[pin]), freq=5000, duty=value)
 
 def servoWritePin(pin, degree=77):
     if degree >= 0 and degree <= 180 and pin in _digitalPins:
         actual_degree = int(degree * (122 - 30) / 180 + 30)
-        servo = PWM(Pin(_analogPins[pin]), freq=50, duty=actual_degree)
+        servo = PWM(Pin(_digitalPins[pin]), freq=50, duty=actual_degree)
 
 def onButtonPressed(button):
     if button == 'AB':
@@ -121,7 +121,7 @@ def pinIsTouched(pin):
         return False
 
 def analogPitch(freq=0, delay=0):
-    buzzer = PWM(Pin(_analogPins[0], Pin.OUT), freq=round(freq), duty=512)
+    buzzer = PWM(Pin(_digitalPins[0], Pin.OUT), freq=round(freq), duty=512)
     if delay > 0:
         if delay > 10:
             pause(delay - 10)
@@ -133,7 +133,7 @@ def analogPitch(freq=0, delay=0):
 
 def playTone(note='-', delay=0):
     if note in _tones:
-        buzzer = PWM(Pin(_analogPins[0], Pin.OUT), freq=round(_tones[note]), duty=512)
+        buzzer = PWM(Pin(_digitalPins[0], Pin.OUT), freq=round(_tones[note]), duty=512)
         if delay > 0:
             if delay > 10:
                 pause(delay - 10)
@@ -147,7 +147,7 @@ def rest(delay):
     playTone('-', delay)
 
 def noTone():
-    buzzer = PWM(Pin(_analogPins[0], Pin.OUT), freq=0, duty=512)
+    buzzer = PWM(Pin(_digitalPins[0], Pin.OUT), freq=0, duty=512)
     buzzer.deinit()
 
 _lightSensorL = ADC(Pin(36))
