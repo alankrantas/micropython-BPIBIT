@@ -200,9 +200,9 @@ As an analog sensor, the temperature reading would not be very accurate. The [NT
 
 If you want to get somewhat more accurate readings before the board warm up, you can call
 
-'''python
+```python
 print(BPIBIT.temperature(rntc=4700))
-'''
+```
 
 To set the resistor value in the voltage divider circuit as 4.7KΩ instead of 5.1KΩ (the actual resistor is still 5.1KΩ), which makes the reading higher.
 
