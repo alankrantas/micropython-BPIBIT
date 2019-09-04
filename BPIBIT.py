@@ -35,7 +35,7 @@ _axisName = {'x':0, 'y':1, 'z':2}
 
 # functions
 def help():
-    print("MicroPython module for BPI:BIT by Alan Wang")
+    print("Running MicroPython module for BPI:BIT by Alan Wang")
     print("- Online doc/source: github.com/alankrantas/micropython-BPIBIT")
     print("- Board: " + str(uos.uname()[4]))
     print("- Firmware: " + str(uos.uname()[3]))
@@ -45,7 +45,8 @@ def help():
     print("- Uploaded files: ")
     for file in uos.listdir():
         print(file)
-    print("--------------------------------------------------")
+    print("---------------------------------------------------------------------------")
+    print("")
 
 def getI2C():
     return I2C(scl=Pin(_digitalPins[19]), sda=Pin(_digitalPins[20]), freq=400000)
@@ -266,7 +267,29 @@ def plotBarGraph(value=0, maxValue=1023, code='W'):
                 ledArray.append('*')
         ledCodeArray(ledArray)
 
+def scrollPic(array, delay=250):
+    ledMain = ['*', '*', '*', '*', '*',
+               '*', '*', '*', '*', '*',
+               '*', '*', '*', '*', '*',
+               '*', '*', '*', '*', '*',
+               '*', '*', '*', '*', '*']
+    ledBuff = array
+    for i in range(10):
+        tmp = [ledBuff[0], ledBuff[5], ledBuff[10], ledBuff[15], ledBuff[20]]
+        for j in range(5):
+            for k in range(5):
+                index = j + k * 5
+                if j < 4:
+                    ledMain[index] = ledMain[index + 1]
+                    ledBuff[index] = ledBuff[index + 1]
+                else:
+                    ledMain[index] = tmp[k]
+                    ledBuff[index] = '*'
+        ledCodeArray(ledMain)
+        pause(delay)
+
 ledOff()
 noTone()
 gc.enable()
 gc.collect()
+help()
