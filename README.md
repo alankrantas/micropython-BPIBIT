@@ -13,7 +13,7 @@ The objectives of this module are
 * pins can be referenced via micro:bit pin numbers, which is easier to remember and will be mapped to corresponding ESP32 pins;
 * most functions are also named after their equivalents in micro:bit's MakeCode JavaScript Block editor.
 
-And sorry, no text scrolling/number displaying. I'll try to figure it out in the future. MicroPython also currently does not support Bluetooth-related functions.
+And sorry, no text scrolling/number displaying. There are simply not enough memory to implement the whole ASCII font library in the module.
 
 This module has been tested on <b>BPI:bit v1.4</b> and <b>MicroPython for ESP32 v1.11-37</b>.
 
@@ -270,6 +270,21 @@ while True:
 ```
 
 If you omit the parameter "code" the default LED color would be white ('W').
+
+### Scroll a Single 5x5 Picture
+
+This function allows you to scroll a single picture (which defined in a array with color codes) across the LED screen, speed adjustable (default 250 ms).
+
+```python
+while True:
+    BPIBIT.scrollPic(array=['B', 'B', 'B', 'R', 'R',
+                            'B', 'W', 'B', 'R', 'R',
+                            'B', 'B', 'B', 'R', 'R',
+                            'R', 'R', 'R', 'R', 'R',
+                            'R', 'R', 'R', 'R', 'R'], delay=150)
+```
+
+Originally I did tried to implement a font library so that it can scroll whatever texts user inputed. However there are simply not enough memory to achieve that. You'll have to scroll your own custom characters via this methon.
 
 ### I2C
 
