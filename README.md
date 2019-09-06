@@ -138,7 +138,7 @@ while True:
 
 Return True/False. Button can be <b>'A'</b>, <b>'B'</b> or <b>'AB'</b> (both).
 
-ESP32 also supports capacitive touch. However, only Pin 0, 1 and 2 are large enough to touch by finger, and Pin 0 (GPIO 25) does not support capacitive touch. Hence in this module only pin 1 and 2 supports capacitive touch.
+ESP32 also supports capacitive touch; on BPI:bit pin 1, 2, 3, 6, 7, 11 are available. However, only Pin 1 and 2 are large enough to be touched by finger, and Pin 0 (GPIO 25) does not support capacitive touch. Pin 11 is shared by button B.
 
 ```python
 print(BPIBIT.pinIsTouched(pin=2))
