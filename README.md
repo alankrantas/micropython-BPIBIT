@@ -1,4 +1,4 @@
-# micropython-BPIBIT: A Simple MicroPython ESP32 Module for BPI:bit/Web:bit
+# micropython-BPIBIT: A MicroPython ESP32 Module for BPI:bit/Web:bit
 
 ![153543457141539355s6op3](https://user-images.githubusercontent.com/44191076/62682966-f88fb280-b9ef-11e9-83e4-47976fa68350.jpg)
 ![800x423xBPI_bit_interfact JPG pagespeed ic NngFYTGX_e](https://user-images.githubusercontent.com/44191076/62682983-047b7480-b9f0-11e9-8b0e-e7c8cc24b677.jpg)
