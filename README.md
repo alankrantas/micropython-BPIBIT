@@ -3,16 +3,16 @@
 ![153543457141539355s6op3](https://user-images.githubusercontent.com/44191076/62682966-f88fb280-b9ef-11e9-83e4-47976fa68350.jpg)
 ![800x423xBPI_bit_interfact JPG pagespeed ic NngFYTGX_e](https://user-images.githubusercontent.com/44191076/62682983-047b7480-b9f0-11e9-8b0e-e7c8cc24b677.jpg)
 
-This is a free project, I didn't get sponsorship or contact from Banana Pi, Webduino or whoever made this board.
+This is a free personal project, I didn't get sponsorship or contact from Banana Pi, Webduino or whoever made this board.
 
 [BPI:bit](http://wiki.banana-pi.org/BPI-Bit) (or Web:bit) is a ESP32 board made in the style of [BBC micro:bit](https://tech.microbit.org/hardware/); the edge connectors allow it to be used on micro:bit accessories.
 
 The features of this module are
 
 * Can be used under standard MicroPython ESP32 firmware, which can be integrated with lots of MicroPython libraries;
-* Pins are referenced by micro:bit pin numbers, which is easier than corresponding ESP32 pins;
-* All components (like buttons and light/temperature/acceleration sensors) aboard the BPI:bit are accessible. Most functions are also named after their equivalents in micro:bit's MakeCode JavaScript Block editor.
-* Support functions like text scrolling, LED bar graph, music notes on buzzer, servo control, etc.
+* Pins are referenced by micro:bit pin numbers, which is easier to remember than [ESP32 pins](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/);
+* All hardware components (like buttons and light/temperature/acceleration sensors) aboard the BPI:bit are accessible. Most functions are also named after their equivalents in micro:bit's MakeCode JavaScript Block editor.
+* Support functions like text scrolling, LED bar graph, music notes on buzzer, servo control, pitch/roll angles, compass direction, etc.
 
 This module has been tested on <b>BPI:bit v1.4</b> and <b>MicroPython for ESP32 v1.11-37</b>.
 
@@ -111,9 +111,9 @@ realGPIO = BPIBIT.digitalPin(pin=2)
 pin = Pin(realGPIO, PIN.OUT)
 ```
 
-Available digital pins for output/input are 0-16 (of micro:bit); available analog pins for innput are 0-7, 10-12 (of micro:bit). Analog pins for output (PWM) are as same as digital ones. Of course, Pin 5 and 11 are already connected to button A/B and the buzzer is on Pin 0.
+Available digital pins for output/input are 0-16 (of micro:bit); available analog pins for input are 0-7, 10-12 (of micro:bit). Analog pins for output (PWM) are as same as digital ones. Of course, Pin 5 and 11 are already connected to button A/B and the buzzer is on Pin 0.
 
-Note: if you tur on ESP32's WiFi, only pin 1, 2 and 5 can be used as analog pins. See [ESP32 Pinout Reference](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/) for more details.
+Note: if you tur on ESP32's WiFi, only pin 1, 2 and 5 can be used as analog input pins. See [ESP32 Pinout Reference](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/) for more details.
 
 ### Servo Control
 
@@ -139,7 +139,7 @@ while True:
 
 Return True/False. Button can be <b>'A'</b>, <b>'B'</b> or <b>'AB'</b> (both).
 
-ESP32 also supports capacitive touch; on BPI:bit pin 1, 2, 3, 6, 7, 11 are available. However, only Pin 1 and 2 are large enough to be touched by finger, and Pin 0 (GPIO 25) does not support capacitive touch. Pin 11 is shared by button B.
+ESP32 also supports capacitive touch; on BPI:bit pin 1, 2, 3, 6, 7, 11 (of micro:bit) are available. However, only Pin 1 and 2 are large enough to be touched by finger, and Pin 0 (GPIO 25) does not support capacitive touch. Pin 11 is shared by button B.
 
 ```python
 print(BPIBIT.pinIsTouched(pin=2))
@@ -195,7 +195,7 @@ while True:
     BPIBIT.pause(100)
 ```
 
-As an analog sensor, the temperature reading would not be very accurate. The [NTC thermistor](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/NTC-0805-103F-3950F.pdf) has B-value of 3950 and resistence of 10KΩ on 25 celsius. Also according to [BPI:bit v1.4 hardware](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/BPI-WEBDUINO-BIT-V1_4.pdf) the thermistor has a 5.1KΩ resistor in the voltage divider circuit. However the reading may be lower until the board itself warm up.
+As an analog sensor, the temperature reading may not be very accurate. The [NTC thermistor](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/NTC-0805-103F-3950F.pdf) has B-value of 3950 and resistence of 10KΩ at 25 celsius. Also according to [BPI:bit v1.4 hardware](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/BPI-WEBDUINO-BIT-V1_4.pdf) the thermistor has a 5.1KΩ resistor in the voltage divider circuit. However the reading may be lower until the board itself warm up.
 
 If you want to get somewhat more accurate readings before the board warm up, you can call
 
@@ -203,7 +203,7 @@ If you want to get somewhat more accurate readings before the board warm up, you
 print(BPIBIT.temperature(rntc=4700))
 ```
 
-To set the resistor value in the voltage divider circuit as 4.7KΩ instead of 5.1KΩ (the actual resistor is still 5.1KΩ), which makes the reading higher.
+to set the resistor value in the voltage divider circuit as 4.7KΩ instead of 5.1KΩ (the actual resistor is still 5.1KΩ), which makes the reading higher.
 
 Or you can simply use <b>BPIBIT.temperatureRaw()</b> (return 0-1023) to get the original analog value.
 
