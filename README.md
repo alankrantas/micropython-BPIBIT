@@ -7,11 +7,12 @@ This is a free project, I didn't get sponsorship or contact from Banana Pi, Webd
 
 [BPI:bit](http://wiki.banana-pi.org/BPI-Bit) (or Web:bit) is a ESP32 board made in the style of [BBC micro:bit](https://tech.microbit.org/hardware/); the edge connectors allow it to be used on micro:bit accessories.
 
-The objectives of this module are
+The features of this module are
 
-* can be used under standard MicroPython ESP32 firmware, which can be integrated with lots of MicroPython libraries;
-* pins can be referenced via micro:bit pin numbers, which is easier to remember and will be mapped to corresponding ESP32 pins;
-* most functions are also named after their equivalents in micro:bit's MakeCode JavaScript Block editor.
+* Can be used under standard MicroPython ESP32 firmware, which can be integrated with lots of MicroPython libraries;
+* Pins are referenced by micro:bit pin numbers, which is easier than corresponding ESP32 pins;
+* All components (like buttons and light/temperature/acceleration sensors) aboard the BPI:bit are accessible. Most functions are also named after their equivalents in micro:bit's MakeCode JavaScript Block editor.
+* Support functions like text scrolling, LED bar graph, music notes on buzzer, servo control, etc.
 
 This module has been tested on <b>BPI:bit v1.4</b> and <b>MicroPython for ESP32 v1.11-37</b>.
 
@@ -60,15 +61,15 @@ BPIBIT.help()
 You'll get something in the REPL like
 
 ```
-MicroPython module for BPI:BIT by Alan Wang
-- Online doc/source: github.com/alankrantas/micropython-BPIBIT
+Running MicroPython module for BPI:BIT by Alan Wang
+(https://github.com/alankrantas/micropython-BPIBIT)
 - Board: ESP32 module with ESP32
 - Firmware: v1.11-37-g62f004ba4 on 2019-06-06
 - CPU: 240000000 Hz
 - Memory status:
-stack: 1008 out of 15360
-GC: total: 121088, used: 26528, free: 94560
- No. of 1-blocks: 333, 2-blocks: 55, max blk sz: 264, max free sz: 3593
+stack: 1728 out of 15360
+GC: total: 121088, used: 53184, free: 67904
+ No. of 1-blocks: 435, 2-blocks: 75, max blk sz: 617, max free sz: 2956
 None
 - Uploaded files: 
 boot.py
@@ -302,12 +303,10 @@ BPIBIT.scrollPics(arrays, delay=150)
 
 ### Scroll Text On LED Display
 
-This module has a limited built-in font library, which allows you to scroll text across the LED display with a certain color code.
-
-Right now there are only capital fonts (A-Z; all text will be converted to capital), numbers (0-9) and some punctuation marks (, . ! : ;).
+This module has a built-in <b>full ASCII fonts library</b>, which allows you to scroll text across the LED display under a certain color code and speed.
 
 ```python
-BPIBIT.scrollText("HELLO WORLD BPI:BIT!", delay=150, code='G')
+BPIBIT.scrollText("Hello World, BPI:bit!", delay=150, code='G')
 ```
 
 ### I2C
