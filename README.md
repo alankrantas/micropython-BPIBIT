@@ -68,8 +68,8 @@ Running MicroPython module for BPI:BIT by Alan Wang
 - CPU: 240000000 Hz
 - Memory status:
 stack: 1728 out of 15360
-GC: total: 121088, used: 53184, free: 67904
- No. of 1-blocks: 435, 2-blocks: 75, max blk sz: 617, max free sz: 2956
+GC: total: 121088, used: 52064, free: 69024
+ No. of 1-blocks: 435, 2-blocks: 79, max blk sz: 611, max free sz: 3014
 None
 - Uploaded files: 
 boot.py
@@ -238,10 +238,12 @@ BPIBIT.ledOff()
 
 * 'W' = white
 * 'R' = red
+* 'O' = orange
 * 'Y' = yellow
 * 'G' = green
 * 'C' = cyan
 * 'B' = blue
+* 'V' = violet
 * 'P' = Purple
 * '*' (asterisk) = black (off)
 
