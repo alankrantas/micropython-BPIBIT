@@ -134,18 +134,15 @@ def getI2C():
 
 def getSPI(sck, miso, mosi, baudrate=100000, polarity=1, phase=0):
     if {sck, miso, mosi} and _digitalPins:
-        return SPI(baudrate=baudrate, polarity=polarity, phase=phase,
-                   sck=Pin(_digitalPins[sck]), mosi=Pin(_digitalPins[mosi]), miso=Pin(_digitalPins[miso]))
+        return SPI(baudrate=baudrate, polarity=polarity, phase=phase, sck=Pin(_digitalPins[sck]), mosi=Pin(_digitalPins[mosi]), miso=Pin(_digitalPins[miso]))
     else:
         return None
 
 def getHSPI(baudrate=10000000, polarity=1, phase=0):
-    return SPI(1, baudrate=baudrate, polarity=polarity, phase=phase, 
-               sck=Pin(_digitalPins[7]), mosi=Pin(_digitalPins[3]), miso=Pin(_digitalPins[6]))
+    return SPI(1, baudrate=baudrate, polarity=polarity, phase=phase, sck=Pin(_digitalPins[7]), mosi=Pin(_digitalPins[3]), miso=Pin(_digitalPins[6]))
 
 def getVSPI(baudrate=10000000, polarity=1, phase=0):
-    return SPI(2, baudrate=baudrate, polarity=polarity, phase=phase, 
-               sck=Pin(_digitalPins[13]), mosi=Pin(_digitalPins[15]), miso=Pin(_digitalPins[14]))
+    return SPI(2, baudrate=baudrate, polarity=polarity, phase=phase, sck=Pin(_digitalPins[13]), mosi=Pin(_digitalPins[15]), miso=Pin(_digitalPins[14]))
 
 def pause(delay=100):
     utime.sleep_ms(delay)
@@ -245,10 +242,7 @@ def temperatureRaw():
 
 def temperature(rntc=5100):
     # see https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/NTC-0805-103F-3950F.pdf
-    vOut = _thermistor.read() / 4095 * 3.3
-    rt = 3.3 * rntc / vOut - rntc
-    temp = 3950 / math.log(rt / (10000 * math.exp(-3950 / (273.15 + 25))))
-    return temp - 273.15
+    return 3950 / math.log((3.3 * rntc / (_thermistor.read() / 4095 * 3.3) - rntc) / (10000 * math.exp(-3950 / (273.15 + 25)))) - 273.15
 
 _mpu9250 = MPU9250(getI2C())
 
@@ -261,12 +255,10 @@ def acceleration(axis=''):
         return 0
 
 def rotationPitch():
-    return (180 / math.pi) * math.atan2(acceleration('y'),
-                             math.sqrt(math.pow(acceleration('x'), 2) + math.pow(acceleration('z'), 2)))
+    return (180 / math.pi) * math.atan2(acceleration('y'), math.sqrt(math.pow(acceleration('x'), 2) + math.pow(acceleration('z'), 2)))
 
 def rotationRoll():
-    return (180 / math.pi) * math.atan2(acceleration('x'),
-                             math.sqrt(math.pow(acceleration('y'), 2) + math.pow(acceleration('z'), 2)))
+    return (180 / math.pi) * math.atan2(acceleration('x'), math.sqrt(math.pow(acceleration('y'), 2) + math.pow(acceleration('z'), 2)))
 
 def gyroscope(axis):
     return _mpu9250.gyro[_axisName[axis]] if axis in _axisName else None
