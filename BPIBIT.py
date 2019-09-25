@@ -172,7 +172,7 @@ def analogWritePin(pin, value=0):
     if value >= 0 and value <= 1023 and pin in _digitalPins:
         pwm = PWM(Pin(_digitalPins[pin]), freq=5000, duty=value)
 
-def servoWritePin(pin, degree=77):
+def servoWritePin(pin, degree=90):
     if degree >= 0 and degree <= 180 and pin in _digitalPins:
         actual_degree = int(degree * (122 - 30) / 180 + 30)
         servo = PWM(Pin(_digitalPins[pin]), freq=50, duty=actual_degree)
