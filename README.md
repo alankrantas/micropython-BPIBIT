@@ -14,35 +14,15 @@ The features of this module are
 * All hardware components (like buttons and light/temperature/acceleration sensors) aboard the BPI:bit are accessible. Most functions are also named after their equivalents in micro:bit's MakeCode JavaScript Block editor.
 * Support functions like text scrolling, LED bar graph, music notes on buzzer, servo control, pitch/roll angles, compass direction, etc.
 
-This module has been tested on <b>BPI:bit v1.4</b> and <b>MicroPython for ESP32 v1.11-37</b>.
+This module has been tested on <b>BPI:bit v1.4</b> and <b>MicroPython for ESP32 v1.11-498</b>. You'll need to erase your board then flash the MicroPython firmware using Espressif's [flash tool](https://www.espressif.com/en/support/download/other-tools) at flash address 0x1000.
 
-## Flash MicroPython Firmware and Upload BPIBIT.py
+## Required MPU-9250 Library
 
-You'll first need to flash [firmware](http://micropython.org/download) of MicroPython for ESP32 by using [flash tool](https://www.espressif.com/en/support/download/other-tools) onto your BPI:bit. I also recommend [Thonny IDE](https://thonny.org/) as the MicroPython editor and library uploader.
-
-First download the firmware .bin file, standard version, without SPIRAM support, then set the flash tool as below (select the COM or communication port which your board is connected). You might need to "erase" the board first to make it work properly afterwards.
-
-![flash](https://user-images.githubusercontent.com/44191076/63651786-74795100-c78b-11e9-864d-d4435f677fa6.jpg)
-
-In Thonny you must go to Tools -> Options and set interpreter to MicroPython:
-
-![thonny1](https://user-images.githubusercontent.com/44191076/63651827-d46ff780-c78b-11e9-87b3-638976919beb.jpg)
-
-When the board is successfully linked you'll see the message below in REPL: (If not, try to reconnect the board and click Stop/Restart several times.)
-
-![thonny2](https://user-images.githubusercontent.com/44191076/63651882-60821f00-c78c-11e9-9625-995681e883e5.jpg)
-
-Finally open BPIBIT.py in Thonny and upload it onto your board:
-
-![thonny3](https://user-images.githubusercontent.com/44191076/63651913-9aebbc00-c78c-11e9-8e17-45fcae7b95df.jpg)
-
-## Upload MPU-9250 Library
-
-The module requires this library to control the onboard MPU-9250 3-axis accelerometer/3-axis gyroscope/3-axis compass:
+The module uses this third-party library to control the onboard MPU-9250 3-axis accelerometer/3-axis gyroscope/3-axis compass:
 
 [MicroPython MPU-9250 (MPU-6500 + AK8963) I2C driver](https://github.com/tuupola/micropython-mpu9250) (Github)
 
-Download the .zip file, unzip then upload <b>mpu9250.py</b>, <b>mpu6500.py</b> and <b>ak8963.py</b> onto your BPI:bit in their original name.
+You need to upload <b>mpu9250.py</b>, <b>mpu6500.py</b> and <b>ak8963.py</b> in this repo onto your BPI:bit in their original name.
 
 ## Functions and Example
 
@@ -160,6 +140,20 @@ BPIBIT.playTone(note='C6', delay=500)
 ```
 
 The module has built-in notes from <b>C3</b> (middle C) to <b>C7</b>. <b>C2 sharp/D2 flat</b> is expressed as <b>'C2D2'</b>, <b>F4 sharp/G4 flat</b> is <b>'F4G4'</b>, and so on.
+
+Below is a little music example:
+
+```python
+BPIBIT.playTone(note='G5', delay=500)
+BPIBIT.playTone(note='G5', delay=500)
+BPIBIT.playTone(note='G5', delay=500)
+BPIBIT.playTone(note='D5E5', delay=350)
+BPIBIT.playTone(note='A5B5', delay=150)
+BPIBIT.playTone(note='G5', delay=500)
+BPIBIT.playTone(note='D5E5', delay=350)
+BPIBIT.playTone(note='A5B5', delay=150)
+BPIBIT.playTone(note='G5', delay=1000)
+```
 
 If the delay time set as <b>0</b> the tone won't stop.
 
