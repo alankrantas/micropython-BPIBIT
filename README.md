@@ -20,7 +20,7 @@ This module has been tested on <b>BPI:bit v1.4</b> and <b>MicroPython for ESP32 
 
 You'll first need to flash [firmware](http://micropython.org/download) of MicroPython for ESP32 by using [flash tool](https://www.espressif.com/en/support/download/other-tools) onto your BPI:bit. I also recommend [Thonny IDE](https://thonny.org/) as the MicroPython editor and library uploader.
 
-First download the firmware .bin file, standard version, without SPIRAM support, then set the flash tool as below (select the COM or communication port which your board is connected):
+First download the firmware .bin file, standard version, without SPIRAM support, then set the flash tool as below (select the COM or communication port which your board is connected). You might need to "erase" the board first to make it work properly afterwards.
 
 ![flash](https://user-images.githubusercontent.com/44191076/63651786-74795100-c78b-11e9-864d-d4435f677fa6.jpg)
 
@@ -281,7 +281,7 @@ import BPIBIT
 
 arrays = [['*', 'Y', 'Y', '*', '*',
           'Y', '*', '*', 'Y', '*',
-          'Y', 'R', 'Y', 'Y', '*',
+          'Y', 'Y', 'Y', 'Y', '*',
           'Y', '*', '*', 'Y', '*',
           'Y', '*', '*', 'Y', '*'],
          ['C', 'C', 'C', '*', '*',
