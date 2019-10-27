@@ -14,7 +14,7 @@ The features of this module are
 * All hardware components (like buttons and light/temperature/acceleration sensors) aboard the BPI:bit are accessible. Most functions are also named after their equivalents in micro:bit's MakeCode JavaScript Block editor.
 * Support functions like text scrolling, LED bar graph, music notes on buzzer, servo control, pitch/roll angles, compass direction, etc.
 
-This module has been tested on <b>BPI:bit v1.4</b> and <b>MicroPython for ESP32 v1.11-498</b>. You'll need to erase your board then flash the MicroPython firmware using Espressif's [flash tool](https://www.espressif.com/en/support/download/other-tools) at flash address 0x1000.
+This module has been tested on <b>BPI:bit v1.4</b> and <b>MicroPython firmware for ESP32 v1.11</b>. You'll need to erase your board clean then flash the MicroPython firmware using Espressif's [flash tool](https://www.espressif.com/en/support/download/other-tools) at flash address 0x1000.
 
 ## Required MPU-9250 Library
 
