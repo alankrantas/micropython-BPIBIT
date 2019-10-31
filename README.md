@@ -44,19 +44,19 @@ You'll get something in the REPL like
 Running MicroPython module for BPI:BIT by Alan Wang
 (https://github.com/alankrantas/micropython-BPIBIT)
 - Board: ESP32 module with ESP32
-- Firmware: v1.11-37-g62f004ba4 on 2019-06-06
+- Firmware: v1.11 on 2019-05-29
 - CPU: 240000000 Hz
 - Memory status:
-stack: 1728 out of 15360
-GC: total: 121088, used: 52064, free: 69024
- No. of 1-blocks: 435, 2-blocks: 79, max blk sz: 611, max free sz: 3014
+stack: 1024 out of 15360
+GC: total: 121280, used: 62912, free: 58368
+ No. of 1-blocks: 632, 2-blocks: 123, max blk sz: 611, max free sz: 1583
 None
 - Uploaded files: 
 boot.py
 BPIBIT.py
-mpu6500.py
 mpu9250.py
 ak8963.py
+mpu6500.py
 ```
 
 ### Pause/Delay/Wait (ms)
@@ -223,6 +223,7 @@ Compass calibration takes 15 seconds, in which you'll have to turn your BPI:bit 
 
 ```python
 BPIBIT.led(index=0, r=255, g=255, b=0)
+BPIBIT.ledAll(r=0, g=128, b=128)
 BPIBIT.ledCode(index=5, code='R')
 BPIBIT.ledCodeAll(code='G')
 BPIBIT.ledOff()
@@ -241,7 +242,7 @@ BPIBIT.ledOff()
 * 'P' = Purple
 * '*' (asterisk) = black (off)
 
-Note: since the NeoPixel LEDs at full power can be very bright and hot (3 LEDs on my board are partially damaged because of this), <b>all led's light levels are greatly reduced under color codes</b>. You'll have to use <b>BPIBIT.led(r, g, b)</b> to set brighter light levels.
+Note: since the NeoPixel LEDs at full power can be very bright and hot (3 LEDs on my board are partially damaged because of this), <b>all led's light levels are greatly reduced under color codes</b>. You'll have to use <b>BPIBIT.led(index, r, g, b)</b> or <b>BPIBIT.ledAll(r, g, b)</b> to set brighter light levels.
 
 You can code the display pattern like
 
