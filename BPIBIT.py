@@ -288,12 +288,16 @@ def calibrateCompass():
 _neoPixel = NeoPixel(Pin(4, Pin.OUT), 25)
 
 def led(index, r=0, g=0, b=0):
-    if index >= 0 and index < 25:
+    if 0 <= index < 25:
         _neoPixel[_ledScreen[index]] = (r, g, b)
         _neoPixel.write()
-    
+
+def ledAll(r=0, g=0, b=0):
+    _neoPixel.fill((r, g, b))
+    _neoPixel.write()
+
 def ledCode(index, code):
-    if index >= 0 and index < 25 and code in _colorCodes:
+    if 0 <= index < 25 and code in _colorCodes:
         _neoPixel[_ledScreen[index]] = _colorCodes[code]
         _neoPixel.write()
 
@@ -312,7 +316,7 @@ def ledOff():
     ledCodeAll('*')
 
 def plotBarGraph(value=0, maxValue=1023, code='W'):
-    if value >= 0 and maxValue > 0 and value <= maxValue:
+    if maxValue > 0 and 0 <= value <= maxValue:
         p = value / maxValue
         valueArray = [0.96, 0.88, 0.84, 0.92, 1.00, 0.76, 0.68, 0.64, 0.72, 0.80, 0.56, 0.48, 0.44, 0.52, 0.60, 0.36, 0.28, 0.24, 0.32, 0.40, 0.16, 0.08, 0.04, 0.12, 0.20]
         ledArray = []
@@ -356,14 +360,8 @@ def scrollText(text, delay=150, code='W'):
         if not (c in _fonts.keys()):
             c = ' '
         for i in range(25):
-            if _fonts[c][i] != '*':
-                ledBuff[i] = code
-            else:
-                ledBuff[i] = '*'
-        if l == len(text) - 1:
-            scrolltime = 10
-        else:
-            scrolltime = _fontsWidth[c] + 1
+            ledBuff[i] = code if _fonts[c][i] != '*' else '*'
+        scrolltime = 10 if l == len(text) - 1 else _fontsWidth[c] + 1
         for i in range(scrolltime):
             tmp = [ledBuff[0], ledBuff[5], ledBuff[10], ledBuff[15], ledBuff[20]]
             for j in range(5):
@@ -382,4 +380,3 @@ ledOff()
 noTone()
 gc.enable()
 gc.collect()
-help()
