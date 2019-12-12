@@ -2,7 +2,7 @@
 # https://micropython.org/download
 # http://docs.micropython.org/en/latest/esp32/quickref.html#
 # http://wiki.banana-pi.org/BPI-Bit
-import machine, micropython, math, uos, utime, gc
+import math, uos, utime, gc
 from machine import Pin, TouchPad, ADC, PWM, I2C, SPI
 from neopixel import NeoPixel
 
@@ -113,30 +113,13 @@ _fonts = {'A':['*', 'X', 'X', '*', '*', 'X', '*', '*', 'X', '*', 'X', 'X', 'X', 
           '>':['X', '*', '*', '*', '*', '*', 'X', '*', '*', '*', '*', '*', 'X', '*', '*', '*', 'X', '*', '*', '*', 'X', '*', '*', '*', '*'],
           ' ':['*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*']}
 _fontsWidth = {'A':4, 'B':4, 'C':4, 'D':4, 'E':4, 'F':4, 'G':5, 'H':4, 'I':3, 'J':5, 'K':4, 'L':4, 'M':5, 'N':5, 'O':4, 'P':4, 'Q':4, 'R':5, 'S':4, 'T':5, 'U':4, 'V':5, 'W':5, 'X':4, 'Y':5, 'Z':4, 'a':5, 'b':4, 'c':4, 'd':4, 'e':4, 'f':4, 'g':5, 'h':4, 'i':1, 'j':3, 'k':4, 'l':3, 'm':5, 'n':4, 'o':4, 'p':4, 'q':4, 'r':4, 's':4, 't':5, 'u':5, 'v':5, 'w':5, 'x':4, 'y':5, 'z':4, '0':4, '1':4, '2':4, '3':4, '4':5, '5':5, '6':5, '7':5, '8':5, '9':5, ',':1, '.':2, '!':1, ':':1, ';':2, '+':3, '-':3, '*':3, '/':5, '_':5, '=':3, '|':3, '\\':5, '`':2, '~':4, '@':5, '#':5, '$':5, '%':5, '^':3, '&':5, '\'':1, '\"':3, '(':2, ')':2, '[':2, ']':2, '{':3, '}':3, '<':3, '>':3, ' ':3}
+LED = 18
 
-# functions
-def help():
-    print("Running MicroPython module for BPI:BIT by Alan Wang")
-    print("(https://github.com/alankrantas/micropython-BPIBIT)")
-    print("- Board: " + str(uos.uname()[4]))
-    print("- Firmware: " + str(uos.uname()[3]))
-    print("- CPU: " + str(machine.freq()) + " Hz")
-    print("- Memory status:")
-    print(micropython.mem_info())
-    print("- Uploaded files: ")
-    for file in uos.listdir():
-        print(file)
-    print("---------------------------------------------------------------------------")
-    print("")
+def getI2C(scl=19, sda=20, freq=400000):
+    return I2C(scl=Pin(_digitalPins[scl]), sda=Pin(_digitalPins[sda]), freq=freq)
 
-def getI2C():
-    return I2C(scl=Pin(_digitalPins[19]), sda=Pin(_digitalPins[20]), freq=400000)
-
-def getSPI(sck, miso, mosi, baudrate=100000, polarity=1, phase=0):
-    if {sck, miso, mosi} and _digitalPins:
-        return SPI(baudrate=baudrate, polarity=polarity, phase=phase, sck=Pin(_digitalPins[sck]), mosi=Pin(_digitalPins[mosi]), miso=Pin(_digitalPins[miso]))
-    else:
-        return None
+def getSPI(sck=13, miso=14, mosi=15, baudrate=100000, polarity=1, phase=0):
+    return SPI(baudrate=baudrate, polarity=polarity, phase=phase, sck=Pin(_digitalPins[sck]), mosi=Pin(_digitalPins[mosi]), miso=Pin(_digitalPins[miso]))
 
 def getHSPI(baudrate=10000000, polarity=1, phase=0):
     return SPI(1, baudrate=baudrate, polarity=polarity, phase=phase, sck=Pin(_digitalPins[7]), mosi=Pin(_digitalPins[3]), miso=Pin(_digitalPins[6]))
@@ -150,48 +133,54 @@ def pause(delay=100):
 def runningTime():
     return utime.ticks_ms()
 
+def runningTimeMicros():
+    return utime.ticks_us()
+
 def digitalPin(pin):
-    return _digitalPins[pin] if pin in _digitalPins else None
+    return _digitalPins[pin]
 
 def digitalReadPin(pin):
-    return Pin(_digitalPins[pin], Pin.IN).value() if pin in _digitalPins else None
+    return Pin(_digitalPins[pin], Pin.IN).value()
 
 def digitalWritePin(pin, value=0):
-    if (value is 0 or value is 1) and pin in _digitalPins:
-        Pin(_digitalPins[pin], Pin.OUT).value(value)
+    Pin(_digitalPins[pin], Pin.OUT).value(value)
 
 def analogReadPin(pin):
-    if pin in _analogPins:
-        adc = ADC(Pin(_analogPins[pin]))
-        adc.atten(ADC.ATTN_11DB)
-        return adc.read() // 4
-    else:
-        return 0
+    adc = ADC(Pin(_analogPins[pin]))
+    adc.atten(ADC.ATTN_11DB)
+    return adc.read() // 4
 
 def analogWritePin(pin, value=0):
-    if value >= 0 and value <= 1023 and pin in _digitalPins:
-        pwm = PWM(Pin(_digitalPins[pin]), freq=5000, duty=value)
+    pwm = PWM(Pin(_digitalPins[pin]), freq=5000, duty=value)
 
 def servoWritePin(pin, degree=90):
-    if degree >= 0 and degree <= 180 and pin in _digitalPins:
-        actual_degree = int(degree * (122 - 30) / 180 + 30)
-        servo = PWM(Pin(_digitalPins[pin]), freq=50, duty=actual_degree)
+    actual_degree = int(degree * (122 - 30) / 180 + 30)
+    servo = PWM(Pin(_digitalPins[pin]), freq=50, duty=actual_degree)
+
+def servoWritePinOff(pin):
+    servo = PWM(Pin(_digitalPins[pin]), freq=50, duty=0)
+    servo.deinit()
 
 def onButtonPressed(button):
     if button == 'AB':
-        return Pin(_digitalPins[5], Pin.IN).value() is 0 and Pin(_digitalPins[11], Pin.IN).value() is 0
+        return Pin(_digitalPins[5], Pin.IN).value() == 0 and Pin(_digitalPins[11], Pin.IN).value() == 0
     elif button == 'A':
-        return Pin(_digitalPins[5], Pin.IN).value() is 0
+        return Pin(_digitalPins[5], Pin.IN).value() == 0
     elif button == 'B':
-        return Pin(_digitalPins[11], Pin.IN).value() is 0
+        return Pin(_digitalPins[11], Pin.IN).value() == 0
     else:
         return False
 
 def pinIsTouched(pin, level=350):
     return TouchPad(Pin(_touchpads[pin])).read() < level if pin in _touchpads else False
 
+_analogPitchPin = 0
+
+def analogSetPitchPin(pin):
+    _analogPitchPin = pin
+
 def analogPitch(freq=0, delay=0):
-    buzzer = PWM(Pin(_digitalPins[0], Pin.OUT), freq=round(freq), duty=512)
+    buzzer = PWM(Pin(_digitalPins[_analogPitchPin], Pin.OUT), freq=round(freq), duty=512)
     if delay > 0:
         if delay > 10:
             pause(delay - 10)
@@ -202,23 +191,16 @@ def analogPitch(freq=0, delay=0):
             buzzer.deinit()
 
 def playTone(note='-', delay=0):
-    if note in _tones:
-        buzzer = PWM(Pin(_digitalPins[0], Pin.OUT), freq=round(_tones[note]), duty=512)
-        if delay > 0:
-            if delay > 10:
-                pause(delay - 10)
-                buzzer.deinit()
-                pause(10)
-            else:
-                pause(delay)
-                buzzer.deinit()
+    analogPitch(freq=_tones[note], delay=delay)
 
 def rest(delay):
-    playTone('-', delay)
+    playTone(note='-', delay=delay)
 
 def noTone():
-    buzzer = PWM(Pin(_digitalPins[0], Pin.OUT), freq=0, duty=512)
+    buzzer = PWM(Pin(_digitalPins[_analogPitchPin], Pin.OUT), freq=0, duty=512)
     buzzer.deinit()
+
+noTone()
 
 _lightSensorL = ADC(Pin(36))
 _lightSensorL.atten(ADC.ATTN_11DB)
@@ -287,66 +269,40 @@ def calibrateCompass():
 
 _neoPixel = NeoPixel(Pin(4, Pin.OUT), 25)
 
-def led(index, r=0, g=0, b=0):
-    if 0 <= index < 25:
-        _neoPixel[_ledScreen[index]] = (r, g, b)
-        _neoPixel.write()
+def led(index, color):
+    _neoPixel[_ledScreen[index]] = color
+    _neoPixel.write()
 
-def ledAll(r=0, g=0, b=0):
-    _neoPixel.fill((r, g, b))
+def ledAll(color):
+    _neoPixel.fill(color)
     _neoPixel.write()
 
 def ledCode(index, code):
-    if 0 <= index < 25 and code in _colorCodes:
-        _neoPixel[_ledScreen[index]] = _colorCodes[code]
-        _neoPixel.write()
+    _neoPixel[_ledScreen[index]] = _colorCodes[code]
+    _neoPixel.write()
 
 def ledCodeAll(code):
-    if code in _colorCodes:
-        _neoPixel.fill(_colorCodes[code])
-        _neoPixel.write()
+    _neoPixel.fill(_colorCodes[code])
+    _neoPixel.write()
 
 def ledCodeArray(array):
     for i in range(25):
-        if array[_ledScreen[i]] in _colorCodes:
-            _neoPixel[i] = _colorCodes[array[_ledScreen[i]]]
+        _neoPixel[i] = _colorCodes[array[_ledScreen[i]]]
     _neoPixel.write()
 
 def ledOff():
     ledCodeAll('*')
 
-def plotBarGraph(value=0, maxValue=1023, code='W'):
-    if maxValue > 0 and 0 <= value <= maxValue:
-        p = value / maxValue
-        valueArray = [0.96, 0.88, 0.84, 0.92, 1.00, 0.76, 0.68, 0.64, 0.72, 0.80, 0.56, 0.48, 0.44, 0.52, 0.60, 0.36, 0.28, 0.24, 0.32, 0.40, 0.16, 0.08, 0.04, 0.12, 0.20]
-        ledArray = []
-        for i in range(25):
-            if p >= valueArray[i]:
-                ledArray.append(code)
-            else:
-                ledArray.append('*')
-        ledCodeArray(ledArray)
-
-def scrollPics(arrays, delay=150):
-    ledMain = ['*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*']
-    scrolltime = 5
-    for i in range(len(arrays)):
-        ledBuff = arrays[i]
-        if i == len(arrays) - 1:
-            scrolltime = 10
-        for i in range(scrolltime):
-            tmp = [ledBuff[0], ledBuff[5], ledBuff[10], ledBuff[15], ledBuff[20]]
-            for j in range(5):
-                for k in range(5):
-                    index = j + k * 5
-                    if j < 4:
-                        ledMain[index] = ledMain[index + 1]
-                        ledBuff[index] = ledBuff[index + 1]
-                    else:
-                        ledMain[index] = tmp[k]
-                        ledBuff[index] = '*'
-            ledCodeArray(ledMain)
-            pause(delay)
+def plotBarGraph(value=0, maxValue=0, code='W'):
+    p = value / maxValue
+    valueArray = [0.96, 0.88, 0.84, 0.92, 1.00, 0.76, 0.68, 0.64, 0.72, 0.80, 0.56, 0.48, 0.44, 0.52, 0.60, 0.36, 0.28, 0.24, 0.32, 0.40, 0.16, 0.08, 0.04, 0.12, 0.20]
+    ledArray = []
+    for i in range(25):
+        if p >= valueArray[i]:
+            ledArray.append(code)
+        else:
+            ledArray.append('*')
+    ledCodeArray(ledArray)
 
 def scrollText(text, delay=150, code='W'):
     ledMain = []
@@ -377,6 +333,5 @@ def scrollText(text, delay=150, code='W'):
             pause(delay)
 
 ledOff()
-noTone()
-gc.enable()
 gc.collect()
+gc.enable()
