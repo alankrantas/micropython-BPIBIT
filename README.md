@@ -46,7 +46,7 @@ import BPIBIT_LITE as BPIBIT
 
 BPIBIT_LITE is basically BPIBIT minus text scrolling functions and font library, which takes less memory.
 
-BPIBIT_LITE 基本上就是 BPIBIT 拿掉文字捲動功能的版本，占的記憶體較少。
+BPIBIT_LITE 基本上就是 BPIBIT 拿掉文字捲動功能與內建字元庫的版本，占的記憶體較少。
 
 ### Pause (停頓)
 
