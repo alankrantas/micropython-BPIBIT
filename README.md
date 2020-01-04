@@ -3,13 +3,13 @@
 ![153543457141539355s6op3](https://user-images.githubusercontent.com/44191076/62682966-f88fb280-b9ef-11e9-83e4-47976fa68350.jpg)
 ![800x423xBPI_bit_interfact JPG pagespeed ic NngFYTGX_e](https://user-images.githubusercontent.com/44191076/62682983-047b7480-b9f0-11e9-8b0e-e7c8cc24b677.jpg)
 
-This is a MicroPython module for [BPI:bit](http://wiki.banana-pi.org/BPI-Bit), which is a [BBC micro:bit](https://tech.microbit.org/hardware/)-like ESP32 board compatible with many micro:bit accessories.
+This is a MicroPython module for [BPI:bit](http://wiki.banana-pi.org/BPI-Bit), which is a [BBC micro:bit](https://tech.microbit.org/hardware/)-like ESP32 board compatible with most micro:bit accessories.
 
-這是針對 BPI:bit 而寫的 MicroPython 模組；BPI:bit 是個仿 BBC micro:bit 的 ESP32 開發板, 與大部分的 micro:bit 擴充板相容。
+這是針對 BPI:bit 而寫的 MicroPython 模組；BPI:bit 是個仿 BBC micro:bit 形式的 ESP32 開發板, 與大部分的 micro:bit 擴充板相容。
 
-This is also a free personal project with no sponsorship whatsoever.
+This is also a free personal project with no sponsorship whatsoever. It's not meant to be a commercial product either.
 
-這也是由本人無償開發的專案，沒拿過廠商任何贊助。
+這也是由本人無償開發的專案，沒拿過廠商任何贊助，也不是要當成商業產品。
 
 This module has been tested on <b>BPI:bit v1.4</b> and <b>MicroPython ESP32 firmware v1.11</b>.
 
@@ -71,7 +71,7 @@ BPIBIT.digitalWritePin(pin=2, value=1) # write digital signal to pin 2 (對 Pin 
 BPIBIT.analogWritePin(pin=2, value=1023) # write analog signal (PWM) to pin 2 (對 Pin 2 寫入類比信號, 或 PWM)
 ```
 
-All ESP32 pin numbers in this module are remapped to micro:bit pins. For example, pin 2 is actually pin 33 on ESP32. It's easier to use micro:bit accessories this way.
+All ESP32 pin numbers in this module are remapped to [micro:bit pins](https://microbit.org/guide/hardware/pins/). For example, pin 2 is actually pin 33 on ESP32. It's easier to use micro:bit accessories this way.
 
 在本 module 中，ESP32 的腳位號碼是以 micro:bit 的腳位號碼來對應的。例如，Pin 2 其實是 ESP32 的 Pin 33。這樣一來，使用 micro:bit 擴充板就會比較容易。
 
@@ -79,9 +79,9 @@ All digital pins can be used to write analog signals.
 
 所有數位腳位都能用來輸出類比訊號。
 
-Avaliable pins to read analog signals are pin 0-7, 10-12. However when the board turns on WiFi, only pin 1, 2 and 5 can be used. Pin 5/11 are connected to A/B buttons. See [ESP32 Pinout Reference](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/) for more details.
+Avaliable pins to read analog signals are pin 0-7, 10-12. However when the board turns on WiFi, only pin 1, 2 and 5 can be used to read analog signals. Pin 5/11 are connected to A/B buttons. See [ESP32 Pinout Reference](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/) for more details.
 
-可用來讀取類比信號的腳位為 Pin 0-7 及 10-12。但板子打開 WiFi 時, 只有 Pin 1、2、5 可以使用。Pin 5/11 已經接在 A/B 鈕。更多資訊請參見上面的連結 ESP32 Pinout Reference。
+可用來讀取類比信號的腳位為 Pin 0-7 及 10-12。但板子打開 WiFi 時, 只有 Pin 1、2、5 可以用於讀取類比信號。Pin 5/11 已經接在 A/B 鈕。更多資訊請參見上面的連結 ESP32 Pinout Reference。
 
 ### Servo Control (伺服馬達控制)
 
@@ -140,18 +140,10 @@ BPIBIT.lightLevel() returns 0-1023, which is average value of the two LDRs. You 
 
 BPIBIT.lightLevel() 會回傳值 0-1023，為左右光敏電阻的平均值。你可以用 <b>BPIBIT.lightLevelL()</b> 或 <b>BPIBIT.lightLevelR()</b> 來取得左右光敏電阻的感光值。
 
-Read approximate temperature (celsius) from the NTC thermistor:
-
-```python
-while True:
-    print(BPIBIT.temperature())
-    BPIBIT.pause(100)
-```
-
 ### Read Temperature (讀取溫度)
 
 ```python
-print(BPIBIT.temperature() # read temperature value (讀取溫度值)
+print(BPIBIT.temperature() # read temperature value in celsius (讀取溫度值, 攝氏)
 ```
 
 The onboard [NTC thermistor](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/NTC-0805-103F-3950F.pdf) has B-value of 3950 and resistence of 10KΩ at 25 celsius. Also according to [BPI:bit v1.4 hardware](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/BPI-WEBDUINO-BIT-V1_4.pdf) the thermistor has a 5.1KΩ resistor in the voltage divider circuit.
@@ -178,9 +170,9 @@ value = BPIBIT.compassHeading() # get compass heading (取得羅盤方位)
 BPIBIT.calibrateCompass() # calibrate compass (校準羅盤)
 ```
 
-The axis parameter can be <b>'x'</b>, <b>'y'</b>, <b>'z'</b> or <b>''</b> (combined).
+The axis parameter can be <b>'x'</b>, <b>'y'</b>, <b>'z'</b> or <b>''</b> (absolute value of all axis combined).
 
-軸參數可以是 <b>'x'</b>、<b>'y'</b>、<b>'z'</b> 或 <b>''</b> (合併).
+軸參數可以是 <b>'x'</b>、<b>'y'</b>、<b>'z'</b> 或 <b>''</b> (三軸絕對值合併).
 
 Compass calibration takes 15 seconds. Turn your BPI:bit around at all directions and away from other magnetic fields ifpossible.
 
@@ -202,7 +194,7 @@ LED 編號為 0 (右下角) 至 24 (左上角)。
 
 Parameter <b>'code'</b> are pre-defined color codes:
 
-參數 <b>'code'</b> 是一系列定義好的顏色代碼:
+參數 <b>'code'</b> 是一系列已定義好的顏色代碼:
 
 * 'W' = white (白)
 * 'R' = red (紅)
@@ -233,9 +225,9 @@ BPIBIT.ledCodeArray(array=ledArray)
 
 ### LED Progress Bar Graph (LED 燈條圖)
 
-The bar graph can be used to show a value's relative level compared to its max value:
+The bar graph can be used to show a value (parameter 'value')'s relative level compared to its max value (parameter 'maxValue'):
 
-燈條圖可用來顯示一個值相對於最大值的程度:
+燈條圖可用來顯示一個值（參數'value'）相對於最大值（參數'maxValue'）的程度:
 
 ```python
 while True:
@@ -245,9 +237,9 @@ while True:
 
 ### Scroll Text (捲動文字)
 
-The module has a built-in ASCII fonts library (not avalible in BPIBIT_LITE). You can scroll a text across the LED display with a specific color code and scroll speed.
+The module has a built-in ASCII fonts library (not included in BPIBIT_LITE). You can scroll a text across the LED display by the specific color code and scroll speed.
 
-此模組內建有 ASCII 字元庫 (BPIBIT_LITE 沒有這項功能)。你能讓一段文字在 LED 螢幕上捲動，並指定顏色代碼及捲動速度。
+此模組內建有 ASCII 字元庫 (BPIBIT_LITE 未包括這項功能)。你能讓一段文字在 LED 螢幕上捲動，並指定顏色代碼及捲動速度。
 
 ```python
 BPIBIT.scrollText("Hello World, BPI:bit!", delay=150, code='G')
@@ -256,6 +248,7 @@ BPIBIT.scrollText("Hello World, BPI:bit!", delay=150, code='G')
 ### I2C
 
 ```python
+# software I2C (軟體 I2C)
 i2c = BPIBIT.getI2C(scl=19, sda=20)
 ```
 
@@ -274,6 +267,6 @@ vspi = BPIBIT.getHSPI(baudrate=10000000, polarity=1, phase=0)
 
 ### Garbage Collection (GC)
 
-The module enables auto garbage collection on import.
+The module enables auto memory garbage collection on import.
 
-此模組在匯入後會啟用 GC (garbage collection)。
+此模組在匯入後會啟用自動 GC (garbage collection) 記憶體垃圾回收。
