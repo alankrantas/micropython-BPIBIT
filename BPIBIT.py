@@ -7,12 +7,27 @@ from machine import Pin, TouchPad, ADC, PWM, I2C, SPI
 from neopixel import NeoPixel
 
 # MPU9250 (MPU6500 + AK8963): https://github.com/tuupola/micropython-mpu9250
-from mpu9250 import MPU9250
-from ak8963 import AK8963
+try:
+    from mpu9250 import MPU9250
+    from ak8963 import AK8963
+    _mpu9250 = MPU9250(I2C(scl=Pin(22), sda=Pin(21), freq=400000))
+except:
+    print("Onboard MPU9250 failed to import driver or initialize")
+    _mpu9250 = None
+
+gc.enable()
 
 # mapping dictionaries
+_analogPitchPin = 0
+_lightSensorL = ADC(Pin(36))
+_lightSensorL.atten(ADC.ATTN_11DB)
+_lightSensorR = ADC(Pin(39))
+_lightSensorR.atten(ADC.ATTN_11DB)
+_thermistor = ADC(Pin(34))
+_thermistor.atten(ADC.ATTN_11DB)
+_neoPixel = NeoPixel(Pin(4, Pin.OUT), 25)
 _analogPins = {3:13, 0:25, 4:16, 5:35, 6:12, 7:14, 1:32, 10:26, 11:27, 12:2, 2:33}
-_digitalPins = {3:13, 0:25, 4:16, 5:35, 6:12, 7:14, 1:32, 8:16, 9:17, 10:26, 11:27, 12:2, 2:33, 13:18, 14:19, 15:23, 16:5, 19:22, 20:21}
+_digitalPins = {'BUILTIN_LED':18, 3:13, 0:25, 4:16, 5:35, 6:12, 7:14, 1:32, 8:16, 9:17, 10:26, 11:27, 12:2, 2:33, 13:18, 14:19, 15:23, 16:5, 19:22, 20:21}
 _touchpads = {3:13, 6:12, 7:14, 1:32, 11:27, 2:33}
 _ledScreen = {0:4, 1:9, 2:14, 3:19, 4:24, 5:3, 6:8, 7:13, 8:18, 9:23, 10:2, 11:7, 12:12, 13:17, 14:22, 15:1, 16:6, 17:11, 18:16, 19:21, 20:0, 21:5, 22:10, 23:15, 24:20}
 _colorCodes = {'W':(16, 16, 16), 'R':(48, 0, 0), 'G':(0, 48, 0), 'B':(0, 0, 48), 'Y':(24, 24, 0), 'C':(0, 24, 24), 'P':(24, 0, 24), 'O':(36, 12, 0), 'T':(0, 36, 12), 'V':(12, 0, 36), '*':(0, 0, 0)}
@@ -113,7 +128,8 @@ _fonts = {'A':['*', 'X', 'X', '*', '*', 'X', '*', '*', 'X', '*', 'X', 'X', 'X', 
           '>':['X', '*', '*', '*', '*', '*', 'X', '*', '*', '*', '*', '*', 'X', '*', '*', '*', 'X', '*', '*', '*', 'X', '*', '*', '*', '*'],
           ' ':['*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*']}
 _fontsWidth = {'A':4, 'B':4, 'C':4, 'D':4, 'E':4, 'F':4, 'G':5, 'H':4, 'I':3, 'J':5, 'K':4, 'L':4, 'M':5, 'N':5, 'O':4, 'P':4, 'Q':4, 'R':5, 'S':4, 'T':5, 'U':4, 'V':5, 'W':5, 'X':4, 'Y':5, 'Z':4, 'a':5, 'b':4, 'c':4, 'd':4, 'e':4, 'f':4, 'g':5, 'h':4, 'i':1, 'j':3, 'k':4, 'l':3, 'm':5, 'n':4, 'o':4, 'p':4, 'q':4, 'r':4, 's':4, 't':5, 'u':5, 'v':5, 'w':5, 'x':4, 'y':5, 'z':4, '0':4, '1':4, '2':4, '3':4, '4':5, '5':5, '6':5, '7':5, '8':5, '9':5, ',':1, '.':2, '!':1, ':':1, ';':2, '+':3, '-':3, '*':3, '/':5, '_':5, '=':3, '|':3, '\\':5, '`':2, '~':4, '@':5, '#':5, '$':5, '%':5, '^':3, '&':5, '\'':1, '\"':3, '(':2, ')':2, '[':2, ']':2, '{':3, '}':3, '<':3, '>':3, ' ':3}
-LED = 18
+
+gc.collect()
 
 def getI2C(scl=19, sda=20, freq=400000):
     return I2C(scl=Pin(_digitalPins[scl]), sda=Pin(_digitalPins[sda]), freq=freq)
@@ -150,8 +166,8 @@ def analogReadPin(pin):
     adc.atten(ADC.ATTN_11DB)
     return adc.read() // 4
 
-def analogWritePin(pin, value):
-    pwm = PWM(Pin(_digitalPins[pin]), freq=5000, duty=value)
+def analogWritePin(pin, value, freq=5000):
+    pwm = PWM(Pin(_digitalPins[pin]), freq=freq, duty=value)
 
 def servoWritePin(pin, degree):
     actual_degree = int(degree * (122 - 30) / 180 + 30)
@@ -162,19 +178,19 @@ def servoWritePinOff(pin):
     servo.deinit()
 
 def onButtonPressed(button):
+    button_a = Pin(_digitalPins[5], Pin.IN)
+    button_b = Pin(_digitalPins[11], Pin.IN)
     if button == 'AB':
-        return Pin(_digitalPins[5], Pin.IN).value() == 0 and Pin(_digitalPins[11], Pin.IN).value() == 0
+        return button_a.value() == 0 and button_b.value() == 0
     elif button == 'A':
-        return Pin(_digitalPins[5], Pin.IN).value() == 0
+        return button_a.value() == 0
     elif button == 'B':
-        return Pin(_digitalPins[11], Pin.IN).value() == 0
+        return button_b.value() == 0
     else:
         return False
 
 def pinIsTouched(pin, level=350):
     return TouchPad(Pin(_touchpads[pin])).read() < level if pin in _touchpads else False
-
-_analogPitchPin = 0
 
 def analogSetPitchPin(pin):
     _analogPitchPin = pin
@@ -200,13 +216,6 @@ def noTone():
     buzzer = PWM(Pin(_digitalPins[_analogPitchPin], Pin.OUT), freq=0, duty=512)
     buzzer.deinit()
 
-noTone()
-
-_lightSensorL = ADC(Pin(36))
-_lightSensorL.atten(ADC.ATTN_11DB)
-_lightSensorR = ADC(Pin(39))
-_lightSensorR.atten(ADC.ATTN_11DB)
-
 def lightLevelL():
     return _lightSensorL.read() // 4
 
@@ -216,9 +225,6 @@ def lightLevelR():
 def lightLevel():
     return (_lightSensorL.read() + _lightSensorR.read()) / 2 // 4
 
-_thermistor = ADC(Pin(34))
-_thermistor.atten(ADC.ATTN_11DB)
-
 def temperatureRaw():
     return _thermistor.read() // 4
 
@@ -226,48 +232,60 @@ def temperature(rntc=5100):
     # see https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/NTC-0805-103F-3950F.pdf
     return 3950 / math.log((3.3 * rntc / (_thermistor.read() / 4095 * 3.3) - rntc) / (10000 * math.exp(-3950 / (273.15 + 25)))) - 273.15
 
-_mpu9250 = MPU9250(getI2C())
-
 def acceleration(axis=''):
-    if axis == '':
-        return abs(_mpu9250.acceleration[_axisName['x']]) + abs(_mpu9250.acceleration[_axisName['y']]) + abs(_mpu9250.acceleration[_axisName['x']])
-    elif axis in _axisName:
-        return _mpu9250.acceleration[_axisName[axis]]
+    if _mpu9250:
+        if axis == '':
+            return abs(_mpu9250.acceleration[_axisName['x']]) + abs(_mpu9250.acceleration[_axisName['y']]) + abs(_mpu9250.acceleration[_axisName['x']])
+        else:
+            return _mpu9250.acceleration[_axisName[axis]] if axis in _axisName else None
     else:
-        return 0
+        return None
 
 def rotationPitch():
-    return (180 / math.pi) * math.atan2(acceleration('y'), math.sqrt(math.pow(acceleration('x'), 2) + math.pow(acceleration('z'), 2)))
+    if _mpu9250:
+        return (180 / math.pi) * math.atan2(acceleration('y'), math.sqrt(math.pow(acceleration('x'), 2) + math.pow(acceleration('z'), 2)))
+    else:
+        return None
 
 def rotationRoll():
-    return (180 / math.pi) * math.atan2(acceleration('x'), math.sqrt(math.pow(acceleration('y'), 2) + math.pow(acceleration('z'), 2)))
+    if _mpu9250:
+        return (180 / math.pi) * math.atan2(acceleration('x'), math.sqrt(math.pow(acceleration('y'), 2) + math.pow(acceleration('z'), 2)))
+    else:
+        return None
 
 def gyroscope(axis):
-    return _mpu9250.gyro[_axisName[axis]] if axis in _axisName else None
+    if _mpu9250:
+        return _mpu9250.gyro[_axisName[axis]] if axis in _axisName else None
+    else:
+        return None
 
 def magneticForce(axis=''):
-    if axis == '':
-        return abs(_mpu9250.magnetic[_axisName['x']]) + abs(_mpu9250.magnetic[_axisName['y']]) + abs(_mpu9250.magnetic[_axisName['z']])
-    elif axis in _axisName:
-        return _mpu9250.magnetic[_axisName[axis]]
+    if _mpu9250:
+        if axis == '':
+            return abs(_mpu9250.magnetic[_axisName['x']]) + abs(_mpu9250.magnetic[_axisName['y']]) + abs(_mpu9250.magnetic[_axisName['z']])
+        else:
+            return _mpu9250.magnetic[_axisName[axis]] if axis in _axisName else None
     else:
-        return 0
+        return None
 
 def compassHeading():
-    return (180 / math.pi) * math.atan2(magneticForce('y'), magneticForce('x'))
+    if _mpu9250:
+        return (180 / math.pi) * math.atan2(magneticForce('y'), magneticForce('x'))
+    else:
+        return None
 
 def calibrateCompass():
-    print("Calibrating compass: keep turning BPI:BIT for 15 seconds.")
-    ak8963 = AK8963(getI2C())
-    offset, scale = ak8963.calibrate(count=150, delay=100)
-    print("Calibration completed.")
-    print("AK8963 offset:")
-    print(offset)
-    print("AK8963 scale:")
-    print(scale)
-    _mpu9250 = MPU9250(getI2C(), ak8963=ak8963)
-
-_neoPixel = NeoPixel(Pin(4, Pin.OUT), 25)
+    if _mpu9250:
+        i2c = I2C(scl=Pin(22), sda=Pin(21), freq=400000)
+        print("Calibrating compass: keep turning BPI:BIT for 15 seconds.")
+        ak8963 = AK8963(i2c)
+        offset, scale = ak8963.calibrate(count=150, delay=100)
+        print("Calibration completed.")
+        print("AK8963 offset:")
+        print(offset)
+        print("AK8963 scale:")
+        print(scale)
+        _mpu9250 = MPU9250(i2c, ak8963=ak8963)
 
 def led(index, color):
     _neoPixel[_ledScreen[index]] = color
@@ -298,23 +316,16 @@ def plotBarGraph(value, maxValue=1023, code='W'):
     valueArray = [0.96, 0.88, 0.84, 0.92, 1.00, 0.76, 0.68, 0.64, 0.72, 0.80, 0.56, 0.48, 0.44, 0.52, 0.60, 0.36, 0.28, 0.24, 0.32, 0.40, 0.16, 0.08, 0.04, 0.12, 0.20]
     ledArray = []
     for i in range(25):
-        if p >= valueArray[i]:
-            ledArray.append(code)
-        else:
-            ledArray.append('*')
+        ledArray.append(code if p >= valueArray[i] else '*')
     ledCodeArray(ledArray)
 
 def scrollText(text, delay=150, code='W'):
-    ledMain = []
-    ledBuff = []
-    for i in range(25):
-        ledMain.append('*')
-        ledBuff.append('*')
+    ledMain = ['*'] * 25
+    ledBuff = ['*'] * 25
     scrolltime = 0
-    for l in range(len(text)):
-        c = text[l]
-        if not (c in _fonts.keys()):
-            c = ' '
+    c = ''
+    for l, t in enumerate(text):
+        c = t if t in _fonts.keys() else ' '
         for i in range(25):
             ledBuff[i] = code if _fonts[c][i] != '*' else '*'
         scrolltime = 10 if l == len(text) - 1 else _fontsWidth[c] + 1
@@ -332,6 +343,5 @@ def scrollText(text, delay=150, code='W'):
             ledCodeArray(ledMain)
             pause(delay)
 
+noTone()
 ledOff()
-gc.collect()
-gc.enable()
