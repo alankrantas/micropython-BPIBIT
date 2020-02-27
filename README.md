@@ -3,21 +3,21 @@
 ![153543457141539355s6op3](https://user-images.githubusercontent.com/44191076/62682966-f88fb280-b9ef-11e9-83e4-47976fa68350.jpg)
 ![800x423xBPI_bit_interfact JPG pagespeed ic NngFYTGX_e](https://user-images.githubusercontent.com/44191076/62682983-047b7480-b9f0-11e9-8b0e-e7c8cc24b677.jpg)
 
-This is a MicroPython module for [BPI:bit](http://wiki.banana-pi.org/BPI-Bit), which is a [BBC micro:bit](https://tech.microbit.org/hardware/)-like ESP32 board compatible with most micro:bit accessories.
+This is a MicroPython module for [BPI:bit](http://wiki.banana-pi.org/BPI-Bit), which is a [BBC micro:bit](https://tech.microbit.org/hardware/)-like ESP32 board compatible with most micro:bit accessories. Most functions of this module are named after MakeCode editor blocks.
 
-這是針對 BPI:bit 而寫的 MicroPython 模組；BPI:bit 是個仿 BBC micro:bit 形式的 ESP32 開發板, 與大部分的 micro:bit 擴充板相容。
+這是針對 BPI:bit 而寫的 MicroPython 模組；BPI:bit 是個仿 BBC micro:bit 形式的 ESP32 開發板, 與大部分的 micro:bit 擴充板相容。此模組大部分功能的名稱都以 MakeCode 編輯器的積木名稱命名。
 
 This is also a free personal project with no sponsorship whatsoever. It's not meant to be a commercial product either.
 
-這也是由本人無償開發的專案，沒拿過廠商任何贊助，也不是要當成商業產品。
+這也是由本人無償開發的專案，沒拿過廠商任何贊助，也無意作為商業產品。
 
-This module has been tested on <b>BPI:bit v1.4</b> and <b>MicroPython ESP32 firmware v1.11</b>.
+This module has been tested on <b>BPI:bit v1.4</b> and <b>MicroPython ESP32 firmware v1.12</b>.
 
-此模組的測試平台為 BPI:bit v1.4 版，MicroPython ESP32 韌體版本 v1.11。
+此模組的測試平台為 BPI:bit v1.4 版，MicroPython ESP32 韌體版本 v1.12。
 
 ## Install Module (安裝模組)
 
-You need to flash your BPI:bit with MicroPython ESP32 firmware and upload the following files onto your board:
+You'll need to flash your BPI:bit with MicroPython ESP32 firmware and upload the following files onto your board:
 
 你得替你的 BPI:bit 燒錄 MicroPython ESP32 韌體，並上傳下列檔案到板子上：
 
@@ -32,6 +32,10 @@ The library for the onboard MPU-9250 3-axis accelerometer/3-axis gyroscope/3-axi
 
 [MicroPython MPU-9250 (MPU-6500 + AK8963) I2C driver](https://github.com/tuupola/micropython-mpu9250)
 
+If MPU-9250 cannot import its driver or be properly initialized for some reason, there will be a a error message when the BPIBIT module is imported. All MPU-9250-related functions would only return None; however, the rest of the board functions would still work.
+
+如果 MPU-9250 驅動程式不存在, 或因故無法正確啟動, 你會在載入 BPIBIT 模組時看到錯誤訊息。與 MPU-9250 相關的功能只會回傳 None, 但其餘功能仍然可以使用。
+
 ### Import Module (匯入模組)
 
 ```python
@@ -44,9 +48,25 @@ or (或)
 import BPIBIT_LITE as BPIBIT
 ```
 
-BPIBIT_LITE is basically BPIBIT minus text scrolling functions and font library, which takes less memory.
+BPIBIT_LITE is basically BPIBIT minus the text scrolling function and font library, which consumes less memory.
 
 BPIBIT_LITE 基本上就是 BPIBIT 拿掉文字捲動功能與內建字元庫的版本，占的記憶體較少。
+
+### Blinky LED (LED 燈閃爍)
+
+Make the built-in LED at the back of the board blinks.
+
+使板子背面的內建 LED 燈閃爍。
+
+```python
+import BPIBIT
+
+while True:
+    BPIBIT.digitalWritePin('BUILTIN_LED', 1)
+    BPIBIT.pause(500)
+    BPIBIT.digitalWritePin('BUILTIN_LED', 0)
+    BPIBIT.pause(500)
+```
 
 ### Pause (停頓)
 
@@ -71,9 +91,9 @@ BPIBIT.digitalWritePin(pin=2, value=1) # write digital signal to pin 2 (對 Pin 
 BPIBIT.analogWritePin(pin=2, value=1023) # write analog signal (PWM) to pin 2 (對 Pin 2 寫入類比信號, 或 PWM)
 ```
 
-All ESP32 pin numbers in this module are remapped to [micro:bit pins](https://microbit.org/guide/hardware/pins/). For example, pin 2 is actually pin 33 on ESP32. It's easier to use micro:bit accessories this way.
+All ESP32 pins in this module are remapped to [micro:bit pin numbers](https://microbit.org/guide/hardware/pins/). For example, pin 2 is actually pin 33 on ESP32. It's easier to use micro:bit accessories this way.
 
-在本 module 中，ESP32 的腳位號碼是以 micro:bit 的腳位號碼來對應的。例如，Pin 2 其實是 ESP32 的 Pin 33。這樣一來，使用 micro:bit 擴充板就會比較容易。
+在本 module 中，ESP32 的腳位號碼都重新對應到 micro:bit 的腳位號碼。例如，Pin 2 其實是 ESP32 的 Pin 33。這樣一來，使用 micro:bit 擴充板就會比較容易。
 
 All digital pins can be used to write analog signals. 
 
@@ -124,9 +144,56 @@ BPIBIT.rest(500) # rest 500 ms (休止 500 毫秒)
 BPIBIT.noTone() # turn off buzzer (關閉蜂鳴器)
 ```
 
-The module has a built-in note library ranged from C3 to C7. C3 sharp/D3 flap is 'C3D3', and so on.
+The module has a built-in note library ranged from C3 to C7. C3 sharp/D3 flap is 'C3D3', and so on. If you input a wrong note, there will be no sound.
 
-此 module 內建有音符頻率表，範圍從 C3 音到 C7 音。升 C3 或降 D3 音的表示法為 C3D3，以此類推。
+此 module 內建有音符頻率表，範圍從 C3 音到 C7 音。升 C3 或降 D3 音的表示法為 C3D3，以此類推。輸入錯誤的音符不會發出聲音。
+
+Below is a short music example:
+
+以下是一段音樂範例：
+
+```python
+import BPIBIT
+
+tempo = 400
+
+BPIBIT.playTone('D4', tempo)
+BPIBIT.playTone('G4', tempo * 2)
+BPIBIT.playTone('A4B4', tempo)
+BPIBIT.playTone('D5', tempo * 2)
+BPIBIT.playTone('G5', tempo)
+BPIBIT.playTone('A5B5', tempo * 1.5)
+BPIBIT.playTone('A5', tempo * 0.5)
+BPIBIT.playTone('G5', tempo)
+BPIBIT.playTone('A5', tempo * 2)
+BPIBIT.playTone('D5', tempo)
+BPIBIT.playTone('D5', tempo * 1.5)
+BPIBIT.playTone('C5', tempo * 0.5)
+BPIBIT.playTone('E5', tempo)
+BPIBIT.playTone('D5', tempo * 1.5)
+BPIBIT.playTone('C5', tempo * 0.5)
+BPIBIT.playTone('E5', tempo)
+BPIBIT.playTone('D5', tempo * 4)
+BPIBIT.rest(tempo)
+BPIBIT.playTone('D4', tempo)
+BPIBIT.playTone('G4', tempo * 2)
+BPIBIT.playTone('A4B4', tempo)
+BPIBIT.playTone('D5', tempo * 2)
+BPIBIT.playTone('F5', tempo)
+BPIBIT.playTone('G5A5', tempo * 1.5)
+BPIBIT.playTone('G5', tempo * 0.5)
+BPIBIT.playTone('F5', tempo)
+BPIBIT.playTone('G5', tempo * 2)
+BPIBIT.playTone('G4', tempo)
+BPIBIT.playTone('G4', tempo * 1.5)
+BPIBIT.playTone('F4G4', tempo * 0.5)
+BPIBIT.playTone('A4', tempo)
+BPIBIT.playTone('G4', tempo * 1.5)
+BPIBIT.playTone('F4G4', tempo * 0.5)
+BPIBIT.playTone('A4B4', tempo)
+BPIBIT.playTone('G4', tempo * 4)
+BPIBIT.noTone()
+```
 
 ### Read Light Level (讀取亮度)
 
@@ -143,7 +210,8 @@ BPIBIT.lightLevel() 會回傳值 0-1023，為左右光敏電阻的平均值。�
 ### Read Temperature (讀取溫度)
 
 ```python
-print(BPIBIT.temperature() # read temperature value in celsius (讀取溫度值, 攝氏)
+print(BPIBIT.temperature()) # read temperature value in Celsius (讀取溫度值, 攝氏)
+print(BPIBIT.temperature() * 9 / 5 + 32) # read temperature value in Fahrenheit (讀取溫度值, 華氏)
 ```
 
 The onboard [NTC thermistor](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/NTC-0805-103F-3950F.pdf) has B-value of 3950 and resistence of 10KΩ at 25 celsius. Also according to [BPI:bit v1.4 hardware](https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/docs/BPI-WEBDUINO-BIT-V1_4.pdf) the thermistor has a 5.1KΩ resistor in the voltage divider circuit.
@@ -159,6 +227,10 @@ As an analog sensor, the temperature reading may not be very accurate.The readin
 <b>BPIBIT.temperatureRaw()</b> 則會回傳熱敏電阻的原始類比值 (0-1023)。
 
 ### Acceleration, Gyroscope and Compass (加速計、陀螺儀與羅盤)
+
+Tese function would only return None if the MPU-9250 cannot be initialized.
+
+若 MPU-9250 無法正確啟動, 以下功能只會傳回 None.
 
 ```python
 value = BPIBIT.acceleration('x') # get acceleration on x axis (取得 X 軸加速度)
@@ -237,9 +309,9 @@ while True:
 
 ### Scroll Text (捲動文字)
 
-The module has a built-in ASCII fonts library (not included in BPIBIT_LITE). You can scroll a text across the LED display by the specific color code and scroll speed.
+The module has a built-in ASCII fonts library (not included in BPIBIT_LITE). The fonts are exactly the same as micro:bit's. You can scroll a text across the LED display by the specific color code and scroll speed.
 
-此模組內建有 ASCII 字元庫 (BPIBIT_LITE 未包括這項功能)。你能讓一段文字在 LED 螢幕上捲動，並指定顏色代碼及捲動速度。
+此模組內建有 ASCII 字元庫 (BPIBIT_LITE 未包括這項功能)。這些字體與 micro:bit 使用的完全相同。你能讓一段文字在 LED 螢幕上捲動，並指定顏色代碼及捲動速度。
 
 ```python
 BPIBIT.scrollText("Hello World, BPI:bit!", delay=150, code='G')
@@ -258,10 +330,10 @@ i2c = BPIBIT.getI2C(scl=19, sda=20)
 # software SPI (軟體 SPI)
 spi = BPIBIT.getSPI(sck=13, miso=14, mosi=15, baudrate=100000, polarity=1, phase=0)
 
-# hardware SPI 1 (not avalible in BPIBIT_LITE): sck=7, miso=6, mosi=3 (硬體 SPI 1, BPIBIT_LITE 沒有這項功能)
+# hardware SPI 1: sck=7, miso=6, mosi=3 (硬體 SPI 1)
 hspi = BPIBIT.getHSPI(baudrate=10000000, polarity=1, phase=0)
 
-# hardware SPI 2 (not avalible in BPIBIT_LITE): sck=13, miso=14, mosi=15 (硬體 SPI 2, BPIBIT_LITE 沒有這項功能)
+# hardware SPI 2: sck=13, miso=14, mosi=15 (硬體 SPI 2)
 vspi = BPIBIT.getHSPI(baudrate=10000000, polarity=1, phase=0)
 ```
 
