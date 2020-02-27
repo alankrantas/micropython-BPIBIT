@@ -1,8 +1,8 @@
-# Simple MicroPython ESP32 Module for BPI:bit/Web:bit by Alan Wang
+# MicroPython ESP32 Module for BPI:bit/Web:bit by Alan Wang
 # https://micropython.org/download
 # http://docs.micropython.org/en/latest/esp32/quickref.html#
 # http://wiki.banana-pi.org/BPI-Bit
-import math, uos, utime, gc
+import math, utime, gc
 from machine import Pin, TouchPad, ADC, PWM, I2C, SPI
 from neopixel import NeoPixel
 
