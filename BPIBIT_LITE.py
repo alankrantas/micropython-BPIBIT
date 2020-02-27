@@ -101,6 +101,7 @@ def analogSetPitchPin(pin):
     _analogPitchPin = pin
 
 def analogPitch(freq, delay):
+    delay = round(delay)
     buzzer = PWM(Pin(_digitalPins[_analogPitchPin], Pin.OUT), freq=round(freq), duty=512)
     if delay > 0:
         if delay > 10:
@@ -112,10 +113,10 @@ def analogPitch(freq, delay):
             buzzer.deinit()
 
 def playTone(note, delay=0):
-    analogPitch(freq=_tones[note], delay=delay)
+    analogPitch(freq=_tones.get(note, 0.0), delay=delay)
 
-def rest(delay):
-    playTone(note='-', delay=delay)
+def rest(delay=0):
+    playTone(note='*', delay=delay)
 
 def noTone():
     buzzer = PWM(Pin(_digitalPins[_analogPitchPin], Pin.OUT), freq=0, duty=512)
