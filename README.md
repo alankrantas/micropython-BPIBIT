@@ -71,8 +71,8 @@ while True:
 ### Pause (停頓)
 
 ```python
-BPIBIT.pause(500) # pause 500 ms (停頓 500 毫秒)
-BPIBIT.pauseMicros(500) # pause 500 ms (停頓 500 微秒)
+BPIBIT.pause(500) # pause 500 milliseconds (停頓 500 毫秒)
+BPIBIT.pauseMicros(500) # pause 500 microseconds (停頓 500 微秒)
 ```
 
 ### System Running Time (系統開機時間)
