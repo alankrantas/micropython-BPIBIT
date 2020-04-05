@@ -32,9 +32,9 @@ The library for the onboard MPU-9250 3-axis accelerometer/3-axis gyroscope/3-axi
 
 [MicroPython MPU-9250 (MPU-6500 + AK8963) I2C driver](https://github.com/tuupola/micropython-mpu9250)
 
-If MPU-9250 cannot import its driver or be properly initialized for some reason, there will be a a error message when the BPIBIT module is imported. All MPU-9250-related functions would only return None; however, the rest of the board functions would still work.
+If MPU-9250 cannot import its driver or be properly initialized for some reason, there will be a a error message when the BPIBIT module is imported. At this state all MPU-9250-related functions would only return <b>None</b>; however, the rest of the BPIBIT module functions would still work.
 
-如果 MPU-9250 驅動程式不存在, 或因故無法正確啟動, 你會在載入 BPIBIT 模組時看到錯誤訊息。與 MPU-9250 相關的功能只會回傳 None, 但其餘功能仍然可以使用。
+如果 MPU-9250 驅動程式不存在, 或因故無法正確啟動, 你會在載入 BPIBIT 模組時看到錯誤訊息。此時與 MPU-9250 相關的功能只會回傳 None, 但 BPIBIT 模組其餘功能仍然可以使用。
 
 ### Import Module (匯入模組)
 
@@ -95,13 +95,9 @@ All ESP32 pins in this module are remapped to [micro:bit pin numbers](https://mi
 
 在本 module 中，ESP32 的腳位號碼都重新對應到 micro:bit 的腳位號碼。例如，Pin 2 其實是 ESP32 的 Pin 33。這樣一來，使用 micro:bit 擴充板就會比較容易。
 
-All digital pins can be used to write analog signals. 
+All digital pins can be used to write analog signals; on the other hand, only pin 1 and 2 can be used to read analog signals (0-1023).
 
-所有數位腳位都能用來輸出類比訊號。
-
-Avaliable pins to read analog signals are pin 0-7, 10-12. However when the board turns on WiFi, only pin 1, 2 and 5 can be used to read analog signals. Pin 5/11 are connected to A/B buttons. See [ESP32 Pinout Reference](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/) for more details.
-
-可用來讀取類比信號的腳位為 Pin 0-7 及 10-12。但板子打開 WiFi 時, 只有 Pin 1、2、5 可以用於讀取類比信號。Pin 5/11 已經接在 A/B 鈕。更多資訊請參見上面的連結 ESP32 Pinout Reference。
+所有數位腳位都能用來輸出類比訊號；然而，只有 Pin 1 與 2 可用於讀取類比訊號 (0-1023)。
 
 ### Servo Control (伺服馬達控制)
 
