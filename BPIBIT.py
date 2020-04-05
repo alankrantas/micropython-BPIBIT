@@ -26,7 +26,7 @@ _lightSensorR.atten(ADC.ATTN_11DB)
 _thermistor = ADC(Pin(34))
 _thermistor.atten(ADC.ATTN_11DB)
 _neoPixel = NeoPixel(Pin(4, Pin.OUT), 25)
-_analogPins = {3:13, 0:25, 4:16, 5:35, 6:12, 7:14, 1:32, 10:26, 11:27, 12:2, 2:33}
+_analogPins = {1:32, 2:33}
 _digitalPins = {'BUILTIN_LED':18, 3:13, 0:25, 4:16, 5:35, 6:12, 7:14, 1:32, 8:16, 9:17, 10:26, 11:27, 12:2, 2:33, 13:18, 14:19, 15:23, 16:5, 19:22, 20:21}
 _touchpads = {3:13, 6:12, 7:14, 1:32, 11:27, 2:33}
 _ledScreen = {0:4, 1:9, 2:14, 3:19, 4:24, 5:3, 6:8, 7:13, 8:18, 9:23, 10:2, 11:7, 12:12, 13:17, 14:22, 15:1, 16:6, 17:11, 18:16, 19:21, 20:0, 21:5, 22:10, 23:15, 24:20}
@@ -162,9 +162,12 @@ def digitalWritePin(pin, value):
     Pin(_digitalPins[pin], Pin.OUT).value(value)
 
 def analogReadPin(pin):
-    adc = ADC(Pin(_analogPins[pin]))
-    adc.atten(ADC.ATTN_11DB)
-    return adc.read() // 4
+    if pin in _analogPins:
+        adc = ADC(Pin(_analogPins[pin]))
+        adc.atten(ADC.ATTN_11DB)
+        return adc.read() // 4
+    else:
+        return None
 
 def analogWritePin(pin, value, freq=5000):
     pwm = PWM(Pin(_digitalPins[pin]), freq=freq, duty=value)
@@ -190,7 +193,7 @@ def onButtonPressed(button):
         return False
 
 def pinIsTouched(pin, level=350):
-    return TouchPad(Pin(_touchpads[pin])).read() < level if pin in _touchpads else False
+    return TouchPad(Pin(_touchpads[pin])).read() < level if pin in _touchpads else N
 
 def analogSetPitchPin(pin):
     _analogPitchPin = pin
