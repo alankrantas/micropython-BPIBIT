@@ -1,18 +1,18 @@
-# MicroPython ESP32 Module for BPI:bit/Web:bit by Alan Wang
-# https://micropython.org/download
-# http://docs.micropython.org/en/latest/esp32/quickref.html#
-# http://wiki.banana-pi.org/BPI-Bit
+# MicroPython ESP32 Module for BPI:bit/Web:bit
+# (Note! for firmware v1.17 only!)
+
 import math, utime, gc
-from machine import Pin, TouchPad, ADC, PWM, I2C, SPI
+from machine import Pin, TouchPad, ADC, PWM, SoftI2C, SPI
 from neopixel import NeoPixel
 
-# MPU9250 (MPU6500 + AK8963): https://github.com/tuupola/micropython-mpu9250
+# MPU9250 (MPU6500 + AK8963):
+# https://github.com/tuupola/micropython-mpu9250
 try:
     from mpu9250 import MPU9250
     from ak8963 import AK8963
-    _mpu9250 = MPU9250(I2C(scl=Pin(22), sda=Pin(21), freq=400000))
+    _mpu9250 = MPU9250(SoftI2C(scl=Pin(22), sda=Pin(21), freq=400000))
 except:
-    print("Onboard MPU9250 failed to import driver or initialize")
+    print('Onboard MPU9250 failed to import driver or initialize!')
     _mpu9250 = None
 
 gc.enable()
@@ -117,7 +117,7 @@ _fonts = {'A':['*', 'X', 'X', '*', '*', 'X', '*', '*', 'X', '*', 'X', 'X', 'X', 
           '^':['*', 'X', '*', '*', '*', 'X', '*', 'X', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*'],
           '&':['*', 'X', 'X', '*', '*', 'X', '*', '*', 'X', '*', '*', 'X', 'X', '*', '*', 'X', '*', '*', 'X', '*', '*', 'X', 'X', '*', 'X'],
           '\'':['X', '*', '*', '*', '*', 'X', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*'],
-          '\"':['X', '*', 'X', '*', '*', 'X', '*', 'X', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*'],
+          '\'':['X', '*', 'X', '*', '*', 'X', '*', 'X', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*'],
           '(':['*', 'X', '*', '*', '*', 'X', '*', '*', '*', '*', 'X', '*', '*', '*', '*', 'X', '*', '*', '*', '*', '*', 'X', '*', '*', '*'],
           ')':['X', '*', '*', '*', '*', '*', 'X', '*', '*', '*', '*', 'X', '*', '*', '*', '*', 'X', '*', '*', '*', 'X', '*', '*', '*', '*'],
           '[':['X', 'X', '*', '*', '*', 'X', '*', '*', '*', '*', 'X', '*', '*', '*', '*', 'X', '*', '*', '*', '*', 'X', 'X', '*', '*', '*'],
@@ -127,12 +127,12 @@ _fonts = {'A':['*', 'X', 'X', '*', '*', 'X', '*', '*', 'X', '*', 'X', 'X', 'X', 
           '<':['*', '*', 'X', '*', '*', '*', 'X', '*', '*', '*', 'X', '*', '*', '*', '*', '*', 'X', '*', '*', '*', '*', '*', 'X', '*', '*'],
           '>':['X', '*', '*', '*', '*', '*', 'X', '*', '*', '*', '*', '*', 'X', '*', '*', '*', 'X', '*', '*', '*', 'X', '*', '*', '*', '*'],
           ' ':['*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*']}
-_fontsWidth = {'A':4, 'B':4, 'C':4, 'D':4, 'E':4, 'F':4, 'G':5, 'H':4, 'I':3, 'J':5, 'K':4, 'L':4, 'M':5, 'N':5, 'O':4, 'P':4, 'Q':4, 'R':5, 'S':4, 'T':5, 'U':4, 'V':5, 'W':5, 'X':4, 'Y':5, 'Z':4, 'a':5, 'b':4, 'c':4, 'd':4, 'e':4, 'f':4, 'g':5, 'h':4, 'i':1, 'j':3, 'k':4, 'l':3, 'm':5, 'n':4, 'o':4, 'p':4, 'q':4, 'r':4, 's':4, 't':5, 'u':5, 'v':5, 'w':5, 'x':4, 'y':5, 'z':4, '0':4, '1':4, '2':4, '3':4, '4':5, '5':5, '6':5, '7':5, '8':5, '9':5, ',':1, '.':2, '!':1, ':':1, ';':2, '+':3, '-':3, '*':3, '/':5, '_':5, '=':3, '|':3, '\\':5, '`':2, '~':4, '@':5, '#':5, '$':5, '%':5, '^':3, '&':5, '\'':1, '\"':3, '(':2, ')':2, '[':2, ']':2, '{':3, '}':3, '<':3, '>':3, ' ':3}
+_fontsWidth = {'A':4, 'B':4, 'C':4, 'D':4, 'E':4, 'F':4, 'G':5, 'H':4, 'I':3, 'J':5, 'K':4, 'L':4, 'M':5, 'N':5, 'O':4, 'P':4, 'Q':4, 'R':5, 'S':4, 'T':5, 'U':4, 'V':5, 'W':5, 'X':4, 'Y':5, 'Z':4, 'a':5, 'b':4, 'c':4, 'd':4, 'e':4, 'f':4, 'g':5, 'h':4, 'i':1, 'j':3, 'k':4, 'l':3, 'm':5, 'n':4, 'o':4, 'p':4, 'q':4, 'r':4, 's':4, 't':5, 'u':5, 'v':5, 'w':5, 'x':4, 'y':5, 'z':4, '0':4, '1':4, '2':4, '3':4, '4':5, '5':5, '6':5, '7':5, '8':5, '9':5, ',':1, '.':2, '!':1, ':':1, ';':2, '+':3, '-':3, '*':3, '/':5, '_':5, '=':3, '|':3, '\\':5, '`':2, '~':4, '@':5, '#':5, '$':5, '%':5, '^':3, '&':5, '\'':1, '\'':3, '(':2, ')':2, '[':2, ']':2, '{':3, '}':3, '<':3, '>':3, ' ':3}
 
 gc.collect()
 
 def getI2C(scl=19, sda=20, freq=400000):
-    return I2C(scl=Pin(_digitalPins[scl]), sda=Pin(_digitalPins[sda]), freq=freq)
+    return SoftI2C(scl=Pin(_digitalPins[scl]), sda=Pin(_digitalPins[sda]), freq=freq)
 
 def getSPI(sck=13, miso=14, mosi=15, baudrate=1000000, polarity=1, phase=0):
     return SPI(baudrate=baudrate, polarity=polarity, phase=phase, sck=Pin(_digitalPins[sck]), mosi=Pin(_digitalPins[mosi]), miso=Pin(_digitalPins[miso]))
@@ -281,13 +281,13 @@ def compassHeading():
 def calibrateCompass():
     if _mpu9250:
         i2c = I2C(scl=Pin(22), sda=Pin(21), freq=400000)
-        print("Calibrating compass: keep turning BPI:BIT for 15 seconds.")
+        print('Calibrating compass: keep turning BPI:BIT for 15 seconds.')
         ak8963 = AK8963(i2c)
         offset, scale = ak8963.calibrate(count=150, delay=100)
-        print("Calibration completed.")
-        print("AK8963 offset:")
+        print('Calibration completed.')
+        print('AK8963 offset:')
         print(offset)
-        print("AK8963 scale:")
+        print('AK8963 scale:')
         print(scale)
         _mpu9250 = MPU9250(i2c, ak8963=ak8963)
 
